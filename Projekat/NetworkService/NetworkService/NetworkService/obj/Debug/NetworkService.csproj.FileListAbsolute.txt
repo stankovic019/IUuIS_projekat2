@@ -33,3 +33,5 @@ C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\Netw
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\HomePageView.baml
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkEntitiesView.g.cs
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkEntitiesView.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayPage.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayPage.baml

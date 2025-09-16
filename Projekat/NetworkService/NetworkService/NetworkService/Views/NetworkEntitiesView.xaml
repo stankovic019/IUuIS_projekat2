@@ -46,7 +46,7 @@
                                 <RadioButton Content=">" IsChecked="False" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
                                 <RadioButton Content="=" IsChecked="False" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
                             </StackPanel>
-                            <ComboBox Height="20" Width="120" SelectedIndex="0">
+                            <ComboBox Height="20" Width="120" SelectedIndex="0" FontFamily="Courier New">
                                 <ComboBoxItem Content="Saved Filters..."/>
                                 <ComboBoxItem Content="Normal Pressure"/>
                                 <ComboBoxItem Content="High Pressure"/>
@@ -58,26 +58,26 @@
                     <Grid Grid.Row="1">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0">
+                        <Grid Grid.Column="1">
 
                             <StackPanel>
                                 <TextBlock Text=" History " FontSize="30" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold"
                                            TextDecorations="Underline"/>
 
-                                <ListBox Height="528.2" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0">
+                                <ListBox Height="528.2" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0" FontFamily="Courier New" FontWeight="DemiBold">
                                     <ListBoxItem>Item1</ListBoxItem>
                                     <ListBoxItem>Item2</ListBoxItem>
                                 </ListBox>
                             </StackPanel>
                         </Grid>
 
-                        <Grid Grid.Column="1">
+                        <Grid Grid.Column="0">
 
-                            <DataGrid x:Name="netEntTable" AutoGenerateColumns="False" Margin="10 0 0 0" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="555">
+                            <DataGrid x:Name="netEntTable" AutoGenerateColumns="False" Margin="0 0 10 0" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="555">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Id" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
                                     <DataGridTextColumn Header="Name" Binding="{Binding}" Width="*" FontFamily="Courier New" />

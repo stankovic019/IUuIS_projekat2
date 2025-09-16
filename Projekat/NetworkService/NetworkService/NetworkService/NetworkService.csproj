@@ -59,6 +59,9 @@
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NetworkDisplayPage.xaml.cs">
+      <DependentUpon>NetworkDisplayPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NetworkEntitiesView.xaml.cs">
       <DependentUpon>NetworkEntitiesView.xaml</DependentUpon>
     </Compile>
@@ -78,6 +81,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\HomePageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NetworkDisplayPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

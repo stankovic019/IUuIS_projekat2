@@ -105,7 +105,8 @@ namespace NetworkService
             naslov_textBlock.Text = "Network Display";
             headerIcon.Source = new BitmapImage(new Uri("/public/icons/network-display-icon.png", UriKind.Relative));
             this.setButtonAndGridVisibillity(1,0, 0, 1, 1, 0, 0);
-            MainFrame.Content = null;
+            var uc = new NetworkDisplayPage();
+            MainFrame.Content = uc;
         }
 
         private void graphButton_Click(object sender, RoutedEventArgs e)

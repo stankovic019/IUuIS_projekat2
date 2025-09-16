@@ -14,3 +14,19 @@ D:\!FTN\!HCI VEZBE\2024-25\PZ2\Projekat\MeteringSimulator\MeteringSimulator\obj\
 D:\!FTN\!HCI VEZBE\2024-25\PZ2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.CoreCompileInputs.cache
 D:\!FTN\!HCI VEZBE\2024-25\PZ2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.exe
 D:\!FTN\!HCI VEZBE\2024-25\PZ2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.exe.config
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.exe
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.AssemblyReference.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MainWindow.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\App.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator_MarkupCompile.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator_MarkupCompile.lref
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\App.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MainWindow.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.g.resources
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.Properties.Resources.resources
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.GenerateResource.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.CoreCompileInputs.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.exe
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.pdb

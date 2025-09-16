@@ -1,0 +1,40 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\MeteringSimulator\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{134D87AD-F428-469F-A98E-5F007EDD241B}|MeteringSimulator\\MeteringSimulator.csproj|c:\\users\\dimitrije\\documents\\github\\iuuis_projekat2\\projekat\\meteringsimulator\\meteringsimulator\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{134D87AD-F428-469F-A98E-5F007EDD241B}|MeteringSimulator\\MeteringSimulator.csproj|solutionrelative:meteringsimulator\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\MeteringSimulator\\MeteringSimulator\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MeteringSimulator\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\MeteringSimulator\\MeteringSimulator\\MainWindow.xaml",
+              "RelativeToolTip": "MeteringSimulator\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-09-16T14:31:04.928Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

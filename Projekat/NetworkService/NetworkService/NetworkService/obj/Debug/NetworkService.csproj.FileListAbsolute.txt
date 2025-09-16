@@ -13,3 +13,23 @@ D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\NetworkService\NetworkService\Netwo
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.CoreCompileInputs.cache
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.exe
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.exe.config
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.exe
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.AssemblyReference.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\MainWindow.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\App.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService_MarkupCompile.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService_MarkupCompile.lref
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\MainWindow.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.g.resources
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.Properties.Resources.resources
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.GenerateResource.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.CoreCompileInputs.cache
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.exe
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\VML\ViewModelLocator.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\HomePageView.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\HomePageView.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkEntitiesView.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkEntitiesView.baml

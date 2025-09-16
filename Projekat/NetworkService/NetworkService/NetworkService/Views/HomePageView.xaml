@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="NetworkService.Views.HomePageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NetworkService.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="727" d:DesignWidth="900">
+    <Border Padding="10">
+
+        <Grid Grid.IsSharedSizeScope="True">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0 0 0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" SharedSizeGroup="HeaderRow"/>
+                    <RowDefinition Height="1.5*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Quick Stats" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="0" Margin="5">
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <TextBlock Text="Entities: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <TextBlock Text="binding" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Margin="5">
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <TextBlock Text="Last P: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <TextBlock Text="binding " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <TextBlock Text="MPa" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Margin="5">
+                        <StackPanel Orientation="Horizontal" Margin="10 0">
+                            <TextBlock Text="Filters: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <TextBlock Text="binding" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0 5 0 5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" SharedSizeGroup="HeaderRow"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Recent History" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+                
+                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
+                <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="10" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Timestamp" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
+                        <DataGridTextColumn Header="Action" Binding="{Binding}" Width="*" FontFamily="Courier New" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
+                        <DataGridTextColumn Header="Undo" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="0 5 0 5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" SharedSizeGroup="HeaderRow"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Saved Filters" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+
+                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
+                <DataGrid x:Name="savedFiltersTable" AutoGenerateColumns="False" Margin="10" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Filter Name" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
+                        <DataGridTextColumn Header="Apply" Binding="{Binding}" Width="0.2*" FontFamily="Courier New"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+        </Grid>
+    </Border>
+</UserControl>

@@ -35,3 +35,8 @@ C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\Netw
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkEntitiesView.baml
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayPage.g.cs
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayPage.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\Helpers\BindableBase.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\Helpers\MyICommand.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\Helpers\ValidationBase.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\bin\Debug\Helpers\ValidationErrors.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\GeneratedInternalTypeHelper.g.cs

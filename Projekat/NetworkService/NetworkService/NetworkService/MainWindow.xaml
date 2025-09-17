@@ -4,17 +4,28 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:local="clr-namespace:NetworkService"
+            xmlns:viewModel="clr-namespace:NetworkService.ViewModel"
+            xmlns:views="clr-namespace:NetworkService.Views"
             mc:Ignorable="d"
-            Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="LightGray">
+            Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="White">
+
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
 
     <Window.InputBindings>
-        <KeyBinding Key="H" Modifiers="Control" Command="{x:Static local:MainWindow.HomeCommand}" />
-        <KeyBinding Key="T" Modifiers="Control" Command="{x:Static local:MainWindow.NetEntitiesCommand}" />
-        <KeyBinding Key="D" Modifiers="Control" Command="{x:Static local:MainWindow.NetDisplayCommand}" />
-        <KeyBinding Key="G" Modifiers="Control" Command="{x:Static local:MainWindow.GraphCommand}" />
-        <KeyBinding Key="E" Modifiers="Control" Command="{x:Static local:MainWindow.ExitCommand}" />
+        <KeyBinding Key="H" Modifiers="Control" Command="{Binding HomeCommand}" />
+        <KeyBinding Key="T" Modifiers="Control" Command="{Binding NetEntitiesCommand}" />
+        <KeyBinding Key="D" Modifiers="Control" Command="{Binding NetDisplayCommand}" />
+        <KeyBinding Key="G" Modifiers="Control" Command="{Binding GraphCommand}" />
+        <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}" />
     </Window.InputBindings>
 
+
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
 
     <Border Background="LightGray">
             <Grid>
@@ -33,20 +44,19 @@
                     <!-- Ikonica levo -->
 
                     <!-- Naslov -->
-                    <TextBlock Text="Simulator infrastukturnih sistema" 
-                   FontSize="36"
-                   FontWeight="DemiBold"
-                   Background="LightGray"
-                   x:Name="naslov_textBlock"
-                   Padding="65 15 0 0"
-                   Grid.Column="0"
-                   FontFamily="Courier New"/>
+                <TextBlock Text="{Binding Title}"
+                           FontSize="36"
+                           FontWeight="DemiBold"
+                           Background="LightGray"
+                           Padding="65 15 0 0"
+                           Grid.Column="0"
+                           FontFamily="Courier New"/>
 
-                    <Image Source="/public/icons/home-icon.png" Width="36" Height="36"
-                   HorizontalAlignment="Left" Margin="20 0"
-                   x:Name="headerIcon"/>
-                        <!-- Exit dugme desno -->
-                <Button Click="exitBtn_Click" Padding="0 5" BorderThickness="0" Background="LightGray"
+                <Image Source="{Binding HeaderIcon}" Width="36" Height="36"
+                       HorizontalAlignment="Left" Margin="20 0"/>
+
+                 <!-- Exit dugme desno -->
+                <Button Command="{Binding ExitCommand}" Padding="0 5" BorderThickness="0" Background="LightGray"
                     x:Name="exitBtn" ToolTip="Exit Application and Save progress (CTRL + E)" Cursor="Hand"
                     Grid.Column="1" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -66,84 +76,97 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0" Background="LightGray">
-                        <StackPanel Orientation="Vertical">
-                                <Button Click="homeButton_Click" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" x:Name="homeBtn" ToolTip="Go to Home (CTRL + H)" Cursor="Hand">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Image Source="/public/icons/home-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                    <StackPanel Orientation="Vertical">
+                        <Button Command="{Binding HomeCommand}" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Go to Home (CTRL + H)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/home-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Home" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                    </StackPanel>
-                                </Button>
-                        <Button Click="netEntButton_Click" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" x:Name="netEntBtn" ToolTip="Open Network Entities (CTRL + T)" Cursor="Hand">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                                        <Image Source="/public/icons/clock-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Network Entities" VerticalAlignment="Center" FontFamily="Courier New" />
-                                    </StackPanel>
-                                </Button>
-                        <Button Click="netDispButton_Click" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" x:Name="netDispBtn" ToolTip="Open Network Display (CTRL + D)" Cursor="Hand">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"> 
-                                        <Image Source="public/icons/network-display-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding NetEntitiesCommand}" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Open Network Entities (CTRL + T)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/clock-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Network Entities" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding NetDisplayCommand}" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Open Network Display (CTRL + D)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/network-display-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Network Display" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                    </StackPanel>
-                                </Button>
-                        <Button Click="graphButton_Click" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" x:Name="graphBtn" ToolTip="View Graph (CTRL + G)" Cursor="Hand">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
-                                    <Image Source="public/icons/graph-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding GraphCommand}" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="View Graph (CTRL + G)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/graph-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Graph" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>                        
-                    </Grid>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
 
                     <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid">
                     
                         <!--ako hocu da mi se mrdaju elementi kad se ne vidi dugme ide visibillity collapsed-->
-                    
-                        <StackPanel Orientation="Vertical">
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="Add new Entity (CTRL + N)" Cursor="Hand"
-                                    x:Name="addBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/add-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Add" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="Delete Selected Entity" Cursor="Hand"
-                                    x:Name="deleteBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/delete-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Delete" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="Undo last action (CTRL + Z)" Cursor="Hand" x:Name="undoBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/undo-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Undo" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="Undo All Actions/Back to the Beginning (CTRL + SHIFT + Z)" Cursor="Hand" x:Name="undoAllBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/undo-all-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Undo All" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="Save your Filter (CTRL + S)" Cursor="Hand" x:Name="saveBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/save-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Save Filter" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        <Button Margin="0 10 0 0" Padding="0 5" BorderThickness="0" Background="LightGray" Visibility="Visible" ToolTip="View Notifications (CTRL + Q)" Cursor="Hand" x:Name="notificationBtn">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Image Source="/public/icons/notification-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Notification" VerticalAlignment="Center" FontFamily="Courier New"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </Grid>
 
-                <Frame x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" Background="White"></Frame>
-                    
-                
+                    <StackPanel Orientation="Vertical">
+
+                        <Button Visibility="{Binding AddBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
+            ToolTip="Add new Entity (CTRL + N)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/add-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding DeleteBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
+            ToolTip="Delete Selected Entity" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/delete-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Delete" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding UndoBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
+            ToolTip="Undo last action (CTRL + Z)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/undo-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Undo" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding UndoAllBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
+            ToolTip="Undo All Actions (CTRL + SHIFT + Z)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/undo-all-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Undo All" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding NotificationBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
+            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
+            ToolTip="View Notifications (CTRL + Q)" Cursor="Hand">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/notification-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Notification" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+
                 </Grid>
+
+                <ContentControl Grid.Column="1" Content="{Binding CurrentView}" Background="White"/>
+
+
+            </Grid>
             
             
             

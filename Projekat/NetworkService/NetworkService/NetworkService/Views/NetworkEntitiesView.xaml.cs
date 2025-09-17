@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,25 +21,10 @@ namespace NetworkService.Views
     /// </summary>
     public partial class NetworkEntitiesView : UserControl
     {
-
-        public static readonly RoutedUICommand SearchCommand = new RoutedUICommand("Search", "SearchCommand", typeof(NetworkEntitiesView));
-
-        private void InitializeRoutes()
-        {
-            CommandBindings.Add(new CommandBinding(SearchCommand, FocusSearchExecuted));
-        }
-
+        
         public NetworkEntitiesView()
         {
             InitializeComponent();
-            this.InitializeRoutes();
-        }
-
-        private void FocusSearchExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            searchEntitiesTBox.Focus();
-            Keyboard.Focus(searchEntitiesTBox); // Dodaj i ovo za sigurnost
-            searchEntitiesTBox.SelectAll();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

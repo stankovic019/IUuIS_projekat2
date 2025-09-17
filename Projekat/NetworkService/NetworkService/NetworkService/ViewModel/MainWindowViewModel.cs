@@ -1,28 +1,144 @@
-﻿using System;
+﻿using NetworkService.Helpers;
+using NetworkService.Views;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Shapes;
 
 namespace NetworkService.ViewModel
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : BindableBase
     {
         private int count = 15; // Inicijalna vrednost broja objekata u sistemu
                                 // ######### ZAMENITI stvarnim brojem elemenata
                                 //           zavisno od broja entiteta u listi
+        
+
+
+
+        private string title = "Simulator infrastukturnih sistema";
+
+        public string Title
+        {
+            get => title;
+            set => SetProperty(ref title, value);
+        }
+
+        private string headerIcon = "/public/icons/home-icon.png";
+        public string HeaderIcon
+        {
+            get => headerIcon;
+            set => SetProperty(ref headerIcon, value);
+        }
+
+        private object currentView;
+        public object CurrentView
+        {
+            get => currentView;
+            set => SetProperty(ref currentView, value);
+        }
+
+        // Dugmići (visibility se rešava preko bool i Converters-a)
+        private bool toolGridVisible;
+        public bool ToolGridVisible
+        {
+            get => toolGridVisible;
+            set => SetProperty(ref toolGridVisible, value);
+        }
+
+        public bool AddBtnVisible { get; set; }
+        public bool DeleteBtnVisible { get; set; }
+        public bool UndoBtnVisible { get; set; }
+        public bool UndoAllBtnVisible { get; set; }
+        public bool NotificationBtnVisible { get; set; }
+
+        // Komande
+        public MyICommand HomeCommand { get; }
+        public MyICommand NetEntitiesCommand { get; }
+        public MyICommand NetDisplayCommand { get; }
+        public MyICommand GraphCommand { get; }
+        public MyICommand ExitCommand { get; }
+
+        private void SetButtons(int g, int b1, int b2, int b3, int b4, int b5)
+        {
+            ToolGridVisible = g == 1;
+            AddBtnVisible = b1 == 1;
+            DeleteBtnVisible = b2 == 1;
+            UndoBtnVisible = b3 == 1;
+            UndoAllBtnVisible = b4 == 1;
+            NotificationBtnVisible = b5 == 1;
+
+            // osvežavanje property-ja
+            OnPropertyChanged(nameof(AddBtnVisible));
+            OnPropertyChanged(nameof(DeleteBtnVisible));
+            OnPropertyChanged(nameof(UndoBtnVisible));
+            OnPropertyChanged(nameof(UndoAllBtnVisible));
+            OnPropertyChanged(nameof(NotificationBtnVisible));
+        }
+
+        private void OnHomeCommand()
+        {
+            Title = "Simulator infrastukturnih sistema";
+            HeaderIcon = "/public/icons/home-icon.png";
+            SetButtons(1, 0, 0, 0, 1, 1);
+            CurrentView = new HomePageView();
+        }
+
+        private void OnNetEntitiesCommand()
+        {
+            Title = "Network Entities";
+            HeaderIcon = "/public/icons/clock-icon.png";
+            SetButtons(1, 1, 1, 1, 1, 0);
+            CurrentView = new NetworkEntitiesView() { DataContext = new NetworkEntitiesViewModel() };
+        }
+
+        private void OnNetDisplayCommand()
+        {
+            Title = "Network Display";
+            HeaderIcon = "/public/icons/network-display-icon.png";
+            SetButtons(1, 0, 0, 1, 1, 0);
+            CurrentView = new NetworkDisplayPage();
+        }
+
+        private void OnGraphCommand()
+        {
+            Title = "Graph";
+            HeaderIcon = "/public/icons/graph-icon.png";
+            SetButtons(0, 0, 0, 0, 0, 0);
+            CurrentView = null;
+        }
+
+        private void OnExitCommand()
+        {
+            if (MessageBox.Show("Exiting will apply all changes. Exit app?", "Exit",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
+        }
 
         public MainWindowViewModel()
         {
             createListener(); //Povezivanje sa serverskom aplikacijom
+            HomeCommand = new MyICommand(OnHomeCommand);
+            NetEntitiesCommand = new MyICommand(OnNetEntitiesCommand);
+            NetDisplayCommand = new MyICommand(OnNetDisplayCommand);
+            GraphCommand = new MyICommand(OnGraphCommand);
+            ExitCommand = new MyICommand(OnExitCommand);
+            OnHomeCommand(); // inicijalno stanje
         }
 
         private void createListener()
         {
             var tcp = new TcpListener(IPAddress.Any, 25675);
+            tcp.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             tcp.Start();
 
             var listeningThread = new Thread(() =>
@@ -53,13 +169,16 @@ namespace NetworkService.ViewModel
                         }
                         else
                         {
-                            //U suprotnom, server je poslao promenu stanja nekog objekta u sistemu
-                            Console.WriteLine(incomming); //Na primer: "Entitet_1:272"
+                            string[] splits = incomming.Split(':');
+                            int value = Convert.ToInt32(splits[1]);
+                            int id = Convert.ToInt32(splits[0].Split('_')[1]);
+                            string dt = DateTime.Now.ToString();
 
-                            //################ IMPLEMENTACIJA ####################
-                            // Obraditi poruku kako bi se dobile informacije o izmeni
-                            // Azuriranje potrebnih stvari u aplikaciji
+                            string path = "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\NetworkService\\NetworkService\\NetworkService\\public\\files\\Log.txt";
 
+                            string content = $"{id}|{value}|{dt}";
+
+                            FileAccessManager.WriteToFile(path, content);
                         }
                     }, null);
                 }

@@ -1,16 +1,17 @@
 ﻿<UserControl x:Class="NetworkService.Views.NetworkEntitiesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NetworkService.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="727" d:DesignWidth="900" Focusable="True" Loaded="UserControl_Loaded">
+             xmlns:viewModel="clr-namespace:NetworkService.ViewModel"
+             Focusable="True" Loaded="UserControl_Loaded">
+
+    <UserControl.DataContext>
+        <viewModel:NetworkEntitiesViewModel/>
+    </UserControl.DataContext>
 
     <UserControl.InputBindings>
-        <KeyBinding Key="F" Modifiers="Control" Command="{x:Static local:NetworkEntitiesView.SearchCommand}" />
+        <KeyBinding Key="R" Modifiers="Control" Command="{Binding ResetCommand}" />
     </UserControl.InputBindings>
-
+    
 
     <Border Padding="10">
 
@@ -22,7 +23,7 @@
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock Text="Total Entities: " FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
-                <TextBlock Text="binding"  FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+                <TextBlock Text="{Binding TotalEntities}" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
             </StackPanel>
 
             <Grid Grid.Row="1">
@@ -36,22 +37,28 @@
 
                     <Grid Grid.Row="0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="searchEntitiesTBox" Text="Search..." FontFamily="Courier New" Height="20" VerticalContentAlignment="Center" Width="450"/>
+                            <ComboBox Height="20" Width="230" SelectedIndex="{Binding SelectedTypeIndex}" FontFamily="Courier New" ToolTip="List of measurement types" Margin="0 0 10 0">
+                                <ComboBoxItem Content="Types..."/>
+                                <ComboBoxItem Content="Type 1"/>
+                                <ComboBoxItem Content="Type 2"/>
+                                <ComboBoxItem Content="Type 3"/>
+                                <!-- etc. -->-->
+                            </ComboBox>
                             <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="Name" IsChecked="True" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
-                                 <RadioButton Content="Type" IsChecked="False" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
+                                <RadioButton Content="=" IsChecked="{Binding EqualChecked}" FontSize="25" FontFamily="Courier New"
+                                             VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0 0 5 0"/>
+                                <RadioButton Content="&lt;" IsChecked="{Binding LessThanChecked}" FontSize="25" FontFamily="Courier New" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0 0 5 0"/>
+                                <RadioButton Content=">" IsChecked="{Binding GreaterThanChecked}" FontSize="25" FontFamily="Courier New" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0 0 5 0"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="&lt;" IsChecked="True" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
-                                <RadioButton Content=">" IsChecked="False" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
-                                <RadioButton Content="=" IsChecked="False" VerticalAlignment="Center" FontFamily="Courier New" VerticalContentAlignment="Center" Margin="5 0" FontSize="20"/>
-                            </StackPanel>
-                            <ComboBox Height="20" Width="120" SelectedIndex="0" FontFamily="Courier New">
-                                <ComboBoxItem Content="Saved Filters..."/>
+                            <TextBox Width="100" Height="20" Text="{Binding SearchIdText}" FontFamily="Courier New" ToolTip="Input ID" Margin="0 0 10 0"/>
+
+                            <ComboBox Height="20" Width="230" SelectedIndex="{Binding SelectedFilterIndex}" FontFamily="Courier New" ToolTip="Filter entities" Margin="0 0 10 0">
+                                <ComboBoxItem Content="Filters..."/>
                                 <ComboBoxItem Content="Normal Pressure"/>
                                 <ComboBoxItem Content="High Pressure"/>
                                 <ComboBoxItem Content="Low Pressure"/>
                             </ComboBox>
+                            <Button Content="Reset" Height="20" Width="100" Command="{Binding ResetCommand}" FontFamily="Courier New"/>
                         </StackPanel>
                     </Grid>
 
@@ -68,7 +75,7 @@
                                 <TextBlock Text=" History " FontSize="30" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold"
                                            TextDecorations="Underline"/>
 
-                                <ListBox Height="528.2" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0" FontFamily="Courier New" FontWeight="DemiBold">
+                                <ListBox Height="511" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0" FontFamily="Courier New" FontWeight="DemiBold">
                                     <ListBoxItem>Item1</ListBoxItem>
                                     <ListBoxItem>Item2</ListBoxItem>
                                 </ListBox>
@@ -77,13 +84,13 @@
 
                         <Grid Grid.Column="0">
 
-                            <DataGrid x:Name="netEntTable" AutoGenerateColumns="False" Margin="0 0 10 0" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="555">
+                            <DataGrid x:Name="netEntTable" AutoGenerateColumns="False" Margin="0 0 10 0" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="555" ItemsSource="{Binding Valves}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Id" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
-                                    <DataGridTextColumn Header="Name" Binding="{Binding}" Width="*" FontFamily="Courier New" />
-                                    <DataGridTextColumn Header="Type" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
-                                    <DataGridTextColumn Header="Last Measurement" Binding="{Binding}" Width="0.8*" FontFamily="Courier New"/>
-                                    <DataGridTextColumn Header="Status" Binding="{Binding}" Width="0.5*" FontFamily="Courier New"/>
+                                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="0.3*" FontFamily="Courier New"/>
+                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" FontFamily="Courier New" />
+                                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" FontFamily="Courier New"/>
+                                    <DataGridTextColumn Header="Last Measurement" Binding="{Binding MeasuredValue}" Width="0.8*" FontFamily="Courier New"/>
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Validation}" Width="0.5*" FontFamily="Courier New"/>
                                 </DataGrid.Columns>
                             </DataGrid>
 

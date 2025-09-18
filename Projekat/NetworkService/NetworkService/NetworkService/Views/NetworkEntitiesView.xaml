@@ -72,7 +72,7 @@
                                 <TextBlock Text=" History " FontSize="30" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold"
                                            TextDecorations="Underline"/>
 
-                                <ListBox Height="511" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0" FontFamily="Courier New" FontWeight="DemiBold" ItemsSource="{Binding HistoryDtos}" SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}">
+                                <ListBox Height="528" ScrollViewer.CanContentScroll="True" Margin="0 10 0 0" FontFamily="Courier New" FontWeight="DemiBold" ItemsSource="{Binding HistoryDtos}" SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding ActionName}" />

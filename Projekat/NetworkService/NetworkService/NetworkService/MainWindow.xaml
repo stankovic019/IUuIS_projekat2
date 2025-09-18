@@ -20,10 +20,13 @@
         <KeyBinding Key="D" Modifiers="Control" Command="{Binding NetDisplayCommand}" />
         <KeyBinding Key="G" Modifiers="Control" Command="{Binding GraphCommand}" />
         <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}" />
-        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NetworkEntitiesVM.AddCommand}" />
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding AddCommand}" />
         <KeyBinding Key="Z" Modifiers="Control" Command="{Binding NetworkEntitiesVM.UndoCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding AddEntityVM.SaveCommand}" />
         <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding NetworkEntitiesVM.UndoAllCommand}" />
         <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding NetworkEntitiesVM.DeleteCommand}" />
+        <KeyBinding Key="C" Modifiers="Shift" Command="{Binding AddEntityVM.ClearCommand}" />
+        <KeyBinding Key="X" Modifiers="Shift" Command="{Binding AddEntityVM.DiscardCommand}" />
     </Window.InputBindings>
 
 
@@ -122,7 +125,7 @@
 
                         <Button Visibility="{Binding AddBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Add new Entity (CTRL + N)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.AddCommand}">
+            ToolTip="Add new Entity (CTRL + N)" Cursor="Hand" Command="{Binding AddCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/add-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Add" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -158,12 +161,35 @@
 
                         <Button Visibility="{Binding NotificationBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="View Notifications (CTRL + Q)" Cursor="Hand">
+            ToolTip="View Notifications (CTRL + W)" Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/notification-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Notification" VerticalAlignment="Center" FontFamily="Courier New"/>
                             </StackPanel>
                         </Button>
+
+                        <Button Visibility="{Binding SaveBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}"  BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Save new entity (CTRL + S)" Cursor="Hand" Command="{Binding AddEntityVM.SaveCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/save-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Save" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding ClearBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}"  BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Clear input (SHIFT + C)" Cursor="Hand" Command="{Binding AddEntityVM.ClearCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/clear-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Clear" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Visibility="{Binding DiscardBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}"  BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Discard entity (SHIFT + X)" Cursor="Hand" Command="{Binding AddEntityVM.DiscardCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/public/icons/delete-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                                <TextBlock Text="Discard" VerticalAlignment="Center" FontFamily="Courier New"/>
+                            </StackPanel>
+                        </Button>
+
+
 
                     </StackPanel>
 

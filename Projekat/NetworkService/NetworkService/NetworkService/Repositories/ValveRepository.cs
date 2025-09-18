@@ -14,6 +14,7 @@ namespace NetworkService.Repositories
     {
         private static ValveRepository _instance;
         private string valveFilePath = "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\NetworkService\\NetworkService\\NetworkService\\public\\files\\Valves.txt";
+        private int greatestId = 0;
         public static ValveRepository Instance
         {
             get
@@ -44,9 +45,11 @@ namespace NetworkService.Repositories
                 valves.Add(new Valve(id, name, type, value, dt));
             }
 
+            this.greatestId = valves.Any() ? valves.Max(v => v.Id) : 0;
         }
 
-        public ObservableCollection<Valve> Valves { get { return valves; } private set { } }
+        public ObservableCollection<Valve> Valves { get { return valves; }}
+        public int GreatestId { get { return greatestId; } set { this.greatestId = value; } }
 
         public void StoreValves()
         {
@@ -54,9 +57,11 @@ namespace NetworkService.Repositories
             
            
             File.WriteAllText(valveFilePath, string.Empty);
-
+            int id = 1; //after closing, shifting all ids to stay in the sequence
+                        //i.e. if valve with id == 3 is deleted, the sequence will have hole in that id,
+                        //and, the more important, the latest item will not be simulated (beacuse his id > items.count)
             foreach (Valve v in valves)
-                FileAccessManager.WriteToFile(valveFilePath, v.ToString());
+                FileAccessManager.WriteToFile(valveFilePath, v.ToString(id++));
         }
     }
 

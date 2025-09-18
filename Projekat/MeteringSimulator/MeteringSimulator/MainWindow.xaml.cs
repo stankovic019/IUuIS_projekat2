@@ -71,7 +71,7 @@ namespace MeteringSimulator
         private void startReporting()
         {
             //Na radnom vreme posalji izmenu vrednosti nekog random objekta i nastavi da to radis u rekurziji
-            int waitTime = r.Next(1000, 5000);
+            int waitTime = r.Next(1000, 3000);
             Task.Delay(waitTime).ContinueWith(_ =>
             {
                 this.Dispatcher.Invoke(() =>
@@ -81,6 +81,7 @@ namespace MeteringSimulator
                     //Upis u text box, radi lakse provere
                     textBox.Text = "Entity_" + objectNum + " changed state to: " + value.ToString() + "\n" + textBox.Text;
                     //Pocni proces ispocetka
+                    askForCount(); //pitamo opet jer je mozda doslo do promene broja objekata, pamti se samo maks vrednost
                     startReporting();
                 });
             });
@@ -143,6 +144,7 @@ namespace MeteringSimulator
             }
         }
 
+       
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

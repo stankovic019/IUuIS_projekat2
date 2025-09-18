@@ -288,7 +288,6 @@ namespace NetworkService.ViewModel
 
         // Komande
         public MyICommand ResetCommand { get; }
-        public MyICommand AddCommand { get; }
         public MyICommand DeleteCommand { get; }
         public MyICommand UndoCommand { get; }
         public MyICommand UndoAllCommand { get; }
@@ -296,7 +295,6 @@ namespace NetworkService.ViewModel
         public NetworkEntitiesViewModel()
         {
             ResetCommand = new MyICommand(OnReset);
-            AddCommand = new MyICommand(OnAdd);
             DeleteCommand = new MyICommand(OnDelete);
             UndoCommand = new MyICommand(OnUndo);
             UndoAllCommand = new MyICommand(OnUndoAll);
@@ -329,13 +327,6 @@ namespace NetworkService.ViewModel
             {
                 NotificationService.Instance.ShowError("Error while reseting filters. Try again later.", "ERROR Reset");
             }
-        }
-
-        private void OnAdd()
-        {
-            if (!IsActive) return;
-
-            MessageBox.Show("add nigga :D");
         }
 
         private void OnDelete()
@@ -372,8 +363,8 @@ namespace NetworkService.ViewModel
                     IUndoService action = undoStack.Pop();
                     if (action.Undo())
                     {   
-                        HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                        HistoryDtos.Remove(forDelete);
+                        HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                        HistoryDtos.Remove(forRemoveFromHistory);
                         if (ValvesView != null)
                             ValvesView.Refresh();
                     }
@@ -402,8 +393,8 @@ namespace NetworkService.ViewModel
                             IUndoService action = undoStack.Pop();
                             if (action.Undo())
                             {
-                                HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                                HistoryDtos.Remove(forDelete);
+                                HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                HistoryDtos.Remove(forRemoveFromHistory);
                                 if (ValvesView != null)
                                     ValvesView.Refresh();
                             }
@@ -427,8 +418,8 @@ namespace NetworkService.ViewModel
                                 IUndoService action = undoStack.Pop();
                                 if (action.Undo())
                                 {
-                                    HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                                    HistoryDtos.Remove(forDelete);
+                                    HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                    HistoryDtos.Remove(forRemoveFromHistory);
                                     if (ValvesView != null)
                                         ValvesView.Refresh();
                                 }

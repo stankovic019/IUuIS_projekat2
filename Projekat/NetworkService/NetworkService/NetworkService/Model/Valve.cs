@@ -163,10 +163,10 @@ namespace NetworkService.Model
 
         }
 
-        public override string ToString()
+        public string ToString(int newId)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Id);
+            sb.Append(newId);
             sb.Append(",");
             sb.Append(Name);
             sb.Append(",");

@@ -49,3 +49,5 @@ C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\Netw
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkS.954836E0.Up2Date
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.exe
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.pdb
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\AddEntityView.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\AddEntityView.baml

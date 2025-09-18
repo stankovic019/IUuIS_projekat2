@@ -174,5 +174,11 @@ namespace MeteringSimulator
         {
             this.DragMove();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.ProjectTopics.SelectedIndex = 0;
+            this.StartButton_Click(this, new RoutedEventArgs());
+        }
     }
 }

@@ -25,7 +25,7 @@
             <Grid Grid.Row="0" Margin="0 0 0 5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" SharedSizeGroup="HeaderRow"/>
-                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Quick Stats" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
@@ -37,28 +37,32 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="0" Margin="5">
-                        <StackPanel Orientation="Horizontal" Margin="10 0">
-                            <TextBlock Text="Entities: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding TotalEntities}" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                    <Border BorderBrush="{Binding BorderBrush}" BorderThickness="2" Margin="5">
+                        <StackPanel Orientation="Horizontal" Margin="5 0"
+                                    HorizontalAlignment="Center">
+                            <TextBlock Text="Total Entities: " FontSize="23" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding TotalEntities}" FontSize="23" FontFamily="Courier New" VerticalAlignment="Center"
+                              TextWrapping="WrapWithOverflow"/>
+                        </StackPanel>
+                    </Border>
+                    <Border BorderBrush="{Binding BorderBrush}" BorderThickness="2" Grid.Column="1" Margin="5">
+                        <StackPanel Orientation="Vertical" Margin="5 0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Last Entity Name" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding LastEntityName}" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
 
-                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="1" Margin="5">
-                        <StackPanel Orientation="Horizontal" Margin="10 0">
-                            <TextBlock Text="Last P: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding LastPressure}" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                            <TextBlock Text=" MPa" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Border BorderBrush="Black" BorderThickness="2" Grid.Column="2" Margin="5">
-                        <StackPanel Orientation="Horizontal" Margin="10 0">
-                            <TextBlock Text="Filters: " FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding ActiveFilters}" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
-                        </StackPanel>
+                    <Border BorderBrush="{Binding BorderBrush}" BorderThickness="2" Grid.Column="2" Margin="5">
+                        <StackPanel Orientation="Vertical" Margin="5 0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="Last Measured Pressure" FontSize="20" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding LastPressure}" FontSize="30" FontFamily="Courier New" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            </StackPanel>
                     </Border>
                 </Grid>
+
             </Grid>
 
             <Grid Grid.Row="1" Margin="0 5 0 5">
@@ -69,9 +73,9 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Recent History" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
-                
+
                 <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
-                <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="10" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
+                <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Timestamp" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
                         <DataGridTextColumn Header="Action" Binding="{Binding}" Width="*" FontFamily="Courier New" />
@@ -80,25 +84,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-
-            <Grid Grid.Row="2" Margin="0 5 0 5">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" SharedSizeGroup="HeaderRow"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="Saved Filters" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
-
-                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
-                <DataGrid x:Name="savedFiltersTable" AutoGenerateColumns="False" Margin="10" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Filter Name" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
-                        <DataGridTextColumn Header="Apply" Binding="{Binding}" Width="0.2*" FontFamily="Courier New"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-
         </Grid>
     </Border>
 </UserControl>

@@ -1,0 +1,6 @@
+1,PressureSensor_Tank1,CableSensor,15,18-Sep-25 04:40:01
+2,PressureSensor_Tank2,CableSensor,17,18-Sep-25 04:15:44
+3,Manometer_MainValve1,DigitalManometer,11,18-Sep-25 04:16:41
+4,PressureSensor_Tank3,CableSensor,1,18-Sep-25 04:40:04
+5,Manometer_MainValve2,DigitalManometer,4,18-Sep-25 04:39:44
+6,Manometer_MainValve3,DigitalManometer,9,18-Sep-25 04:39:57

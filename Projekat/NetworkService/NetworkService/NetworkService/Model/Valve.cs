@@ -135,5 +135,21 @@ namespace NetworkService.Model
 
 
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Id);
+            sb.Append(",");
+            sb.Append(Name);
+            sb.Append(",");
+            sb.Append(Type.ToString());
+            sb.Append(",");
+            sb.Append(MeasuredValue);
+            sb.Append(",");
+            sb.Append(DateTime);
+
+            return sb.ToString();
+        }
     }
 }

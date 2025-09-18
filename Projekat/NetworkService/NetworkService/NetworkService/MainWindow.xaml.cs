@@ -9,6 +9,7 @@ namespace NetworkService
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel();
+
         }
     }
 }

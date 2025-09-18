@@ -20,7 +20,7 @@ namespace NetworkService.Views
     /// </summary>
     public partial class NetworkDisplayPage : UserControl
     {
-        private Point _startPoint;
+
         public NetworkDisplayPage()
         {
             InitializeComponent();

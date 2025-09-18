@@ -8,7 +8,7 @@ namespace NetworkService.Model
 {
     public enum ValveType
     {
-        KablovskiSenzor,
-        DigitalniManometar
+        CableSensor,
+        DigitalManometer
     }
 }

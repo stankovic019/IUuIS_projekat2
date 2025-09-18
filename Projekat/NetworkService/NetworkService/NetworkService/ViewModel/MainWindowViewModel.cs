@@ -1,7 +1,11 @@
 ﻿using NetworkService.Helpers;
+using NetworkService.Model;
+using NetworkService.Repositories;
 using NetworkService.Views;
+using Notification.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,13 +20,19 @@ namespace NetworkService.ViewModel
 {
     public class MainWindowViewModel : BindableBase
     {
-        private int count = 15; // Inicijalna vrednost broja objekata u sistemu
-                                // ######### ZAMENITI stvarnim brojem elemenata
-                                //           zavisno od broja entiteta u listi
+
+        NotificationManager notificationManager;
+
+        ValveRepository valveRepository;
+
+        private ObservableCollection<Valve> valves;
+
+        private int count = 0;
+
+        public NetworkEntitiesViewModel NetworkEntitiesVM { get; }
+
+        private NetworkEntitiesView networkEntitiesViewInstance;
         
-
-
-
         private string title = "Simulator infrastukturnih sistema";
 
         public string Title
@@ -60,6 +70,7 @@ namespace NetworkService.ViewModel
         public bool NotificationBtnVisible { get; set; }
 
         // Komande
+        public MyICommand ShowNotificationCommand { get; }
         public MyICommand HomeCommand { get; }
         public MyICommand NetEntitiesCommand { get; }
         public MyICommand NetDisplayCommand { get; }
@@ -89,6 +100,7 @@ namespace NetworkService.ViewModel
             HeaderIcon = "/public/icons/home-icon.png";
             SetButtons(1, 0, 0, 0, 1, 1);
             CurrentView = new HomePageView();
+            NetworkEntitiesVM.IsActive = false;
         }
 
         private void OnNetEntitiesCommand()
@@ -96,7 +108,8 @@ namespace NetworkService.ViewModel
             Title = "Network Entities";
             HeaderIcon = "/public/icons/clock-icon.png";
             SetButtons(1, 1, 1, 1, 1, 0);
-            CurrentView = new NetworkEntitiesView() { DataContext = new NetworkEntitiesViewModel() };
+            CurrentView = networkEntitiesViewInstance;
+            NetworkEntitiesVM.IsActive = true;
         }
 
         private void OnNetDisplayCommand()
@@ -105,6 +118,7 @@ namespace NetworkService.ViewModel
             HeaderIcon = "/public/icons/network-display-icon.png";
             SetButtons(1, 0, 0, 1, 1, 0);
             CurrentView = new NetworkDisplayPage();
+            NetworkEntitiesVM.IsActive = false;
         }
 
         private void OnGraphCommand()
@@ -113,20 +127,28 @@ namespace NetworkService.ViewModel
             HeaderIcon = "/public/icons/graph-icon.png";
             SetButtons(0, 0, 0, 0, 0, 0);
             CurrentView = null;
+            NetworkEntitiesVM.IsActive = false;
         }
 
         private void OnExitCommand()
         {
             if (MessageBox.Show("Exiting will apply all changes. Exit app?", "Exit",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
+            {   
+                //ValveRepository.Instance.StoreValves();
                 Application.Current.Shutdown();
             }
         }
 
         public MainWindowViewModel()
         {
+            notificationManager = new NotificationManager();
+            valveRepository = ValveRepository.Instance;
+            valves = valveRepository.Valves;
+            count = valves.Count;
             createListener(); //Povezivanje sa serverskom aplikacijom
+            NetworkEntitiesVM = new NetworkEntitiesViewModel();
+            networkEntitiesViewInstance = new NetworkEntitiesView { DataContext = NetworkEntitiesVM };
             HomeCommand = new MyICommand(OnHomeCommand);
             NetEntitiesCommand = new MyICommand(OnNetEntitiesCommand);
             NetDisplayCommand = new MyICommand(OnNetDisplayCommand);
@@ -172,6 +194,7 @@ namespace NetworkService.ViewModel
                             string[] splits = incomming.Split(':');
                             int value = Convert.ToInt32(splits[1]);
                             int id = Convert.ToInt32(splits[0].Split('_')[1]);
+                            id = id == 0 ? count : id;
                             string dt = DateTime.Now.ToString();
 
                             string path = "C:\\Users\\Dimitrije\\Documents\\GitHub\\IUuIS_projekat2\\Projekat\\NetworkService\\NetworkService\\NetworkService\\public\\files\\Log.txt";

@@ -5,6 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:local="clr-namespace:NetworkService"
             xmlns:viewModel="clr-namespace:NetworkService.ViewModel"
+            xmlns:notifications="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
             xmlns:views="clr-namespace:NetworkService.Views"
             mc:Ignorable="d"
             Title="MainWindow" Height="800" Width="1200" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="White">
@@ -19,6 +20,10 @@
         <KeyBinding Key="D" Modifiers="Control" Command="{Binding NetDisplayCommand}" />
         <KeyBinding Key="G" Modifiers="Control" Command="{Binding GraphCommand}" />
         <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}" />
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NetworkEntitiesVM.AddCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding NetworkEntitiesVM.UndoCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding NetworkEntitiesVM.UndoAllCommand}" />
+        <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding NetworkEntitiesVM.DeleteCommand}" />
     </Window.InputBindings>
 
 
@@ -27,23 +32,24 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
 
-    <Border Background="LightGray">
+    <Border Background="White">
+
             <Grid>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="10*"/>
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Background="LightGray">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="0.153*"/>
-                    </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0" Background="LightGray">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.153*"/>
+                </Grid.ColumnDefinitions>
 
-                    <!-- Ikonica levo -->
+                <!-- Ikonica levo -->
 
-                    <!-- Naslov -->
+                <!-- Naslov -->
                 <TextBlock Text="{Binding Title}"
                            FontSize="36"
                            FontWeight="DemiBold"
@@ -55,27 +61,27 @@
                 <Image Source="{Binding HeaderIcon}" Width="36" Height="36"
                        HorizontalAlignment="Left" Margin="20 0"/>
 
-                 <!-- Exit dugme desno -->
+                <!-- Exit dugme desno -->
                 <Button Command="{Binding ExitCommand}" Padding="0 5" BorderThickness="0" Background="LightGray"
                     x:Name="exitBtn" ToolTip="Exit Application and Save progress (CTRL + E)" Cursor="Hand"
                     Grid.Column="1" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="/public/icons/exit-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
+                        <Image Source="/public/icons/exit-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                         <TextBlock Text="Exit" VerticalAlignment="Center" FontFamily="Courier New"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
+                    </StackPanel>
+                </Button>
+            </Grid>
 
 
-                <Grid Grid.Row="1">
+            <Grid Grid.Row="1">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="5.5*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5.5*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0" Background="LightGray">
+                <Grid Grid.Column="0" Background="LightGray">
                     <StackPanel Orientation="Vertical">
                         <Button Command="{Binding HomeCommand}" BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" ToolTip="Go to Home (CTRL + H)" Cursor="Hand">
                             <StackPanel Orientation="Horizontal">
@@ -108,15 +114,15 @@
 
                 </Grid>
 
-                    <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid">
-                    
-                        <!--ako hocu da mi se mrdaju elementi kad se ne vidi dugme ide visibillity collapsed-->
+                <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid">
+
+                    <!--ako hocu da mi se mrdaju elementi kad se ne vidi dugme ide visibillity collapsed-->
 
                     <StackPanel Orientation="Vertical">
 
                         <Button Visibility="{Binding AddBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Add new Entity (CTRL + N)" Cursor="Hand">
+            ToolTip="Add new Entity (CTRL + N)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.AddCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/add-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Add" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -125,7 +131,7 @@
 
                         <Button Visibility="{Binding DeleteBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Delete Selected Entity" Cursor="Hand">
+            ToolTip="Delete Selected Entity" Cursor="Hand" Command="{Binding NetworkEntitiesVM.DeleteCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/delete-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Delete" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -134,7 +140,7 @@
 
                         <Button Visibility="{Binding UndoBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Undo last action (CTRL + Z)" Cursor="Hand">
+            ToolTip="Undo last action (CTRL + Z)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.UndoCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/undo-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Undo" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -143,7 +149,7 @@
 
                         <Button Visibility="{Binding UndoAllBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Undo All Actions (CTRL + SHIFT + Z)" Cursor="Hand">
+            ToolTip="Undo all actions and go back to the beginning or to the selected history item (CTRL + SHIFT + Z)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.UndoAllCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/undo-all-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Undo All" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -167,12 +173,19 @@
 
 
             </Grid>
-            
-            
-            
-            </Grid>
-        
-        
-        
-        </Border>
+
+            <notifications:NotificationArea
+                x:Name="WindowNotificationArea"
+                Width="450"
+                Grid.RowSpan="2"
+                MaxItems="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0 0 5 0"/>
+
+        </Grid>
+
+
+
+    </Border>
     </Window>

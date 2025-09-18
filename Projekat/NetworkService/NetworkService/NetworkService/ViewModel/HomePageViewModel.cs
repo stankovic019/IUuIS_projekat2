@@ -20,8 +20,7 @@ namespace NetworkService.ViewModel
 {
     public class HomePageViewModel : BindableBase
     {
-        // Quick stats
-
+       
         private HistoryRepository historyRepository;
         private Stack<IUndoService> undoStack;
         private string[] toolTips;
@@ -118,7 +117,7 @@ namespace NetworkService.ViewModel
                         string path = @"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\files\Log.txt";
                         string[] readLines;
 
-                        lock (fileLock) // čuvaj od preplitanja čitanja/pisanja
+                        lock (fileLock) //pausing the current thread so it will overload
                         {
                             if (!File.Exists(path))
                             {
@@ -130,7 +129,7 @@ namespace NetworkService.ViewModel
 
                         }
 
-                        // Update UI 
+
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             int total = readLines.Length;
@@ -171,7 +170,6 @@ namespace NetworkService.ViewModel
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error reading file: " + ex.Message);
                     }
 
                     Thread.Sleep(1000);

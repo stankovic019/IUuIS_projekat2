@@ -6,16 +6,15 @@ using System.Threading;
 
 public static class FileAccessManager
 {
-    // Globalni mutex, koristi ime koje je isto za sve instance aplikacije
+    // One global mutex for read/write threads
     private static readonly Mutex fileMutex = new Mutex(false, "Global\\NetworkServiceFileMutex");
     
     public static void WriteToFile(string path, string content)
     {
         try
         {
-            fileMutex.WaitOne(); // čekaj dok mutex ne bude dostupan
+            fileMutex.WaitOne();
 
-            // Piši u fajl
             using (StreamWriter write = new StreamWriter(path, true))
             {
                 write.WriteLine(content);
@@ -23,7 +22,7 @@ public static class FileAccessManager
         }
         finally
         {
-            fileMutex.ReleaseMutex(); // obavezno otpusti mutex
+            fileMutex.ReleaseMutex(); 
         }
     }
 
@@ -31,9 +30,8 @@ public static class FileAccessManager
     {
         try
         {
-            fileMutex.WaitOne(); // čekaj dok mutex ne bude dostupan
+            fileMutex.WaitOne(); 
 
-            // Pročitaj sve linije odjednom i vrati kao niz
             return File.ReadAllLines(path);
         }
         finally

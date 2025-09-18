@@ -42,7 +42,6 @@ namespace NetworkService.Helpers
                         this.validationErrors.Add(fieldName, value);
                     }
                 }
-                //this.OnPropertyChanged();
                 this.OnPropertyChanged("IsValid");
             }
         }

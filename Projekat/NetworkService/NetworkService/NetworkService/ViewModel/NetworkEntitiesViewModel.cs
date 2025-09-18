@@ -45,7 +45,7 @@ namespace NetworkService.ViewModel
                         string path = @"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\files\Log.txt";
                         string[] readLines;
 
-                        lock (fileLock) // čuvaj od preplitanja čitanja/pisanja
+                        lock (fileLock)
                         {
                             if (!File.Exists(path))
                             {
@@ -90,7 +90,7 @@ namespace NetworkService.ViewModel
                         Console.WriteLine("Error reading file: " + ex.Message);
                     }
 
-                    Thread.Sleep(1000); // čitaj svake sekunde
+                    Thread.Sleep(1000); 
                 }
             });
 
@@ -98,8 +98,6 @@ namespace NetworkService.ViewModel
             readingThread.Start();
         }
 
-        // Filter UI properties
-        // Filter UI properties
         private int selectedTypeIndex;
         public int SelectedTypeIndex
         {
@@ -109,7 +107,6 @@ namespace NetworkService.ViewModel
                 if (selectedTypeIndex != value)
                 {
                     SetProperty(ref selectedTypeIndex, value);
-                    System.Diagnostics.Debug.WriteLine($"SelectedTypeIndex changed to: {value}");
                     RefreshFilter();
                 }
             }
@@ -124,7 +121,6 @@ namespace NetworkService.ViewModel
                 if (selectedFilterIndex != value)
                 {
                     SetProperty(ref selectedFilterIndex, value);
-                    System.Diagnostics.Debug.WriteLine($"SelectedFilterIndex changed to: {value}");
                     RefreshFilter();
                 }
             }
@@ -142,7 +138,6 @@ namespace NetworkService.ViewModel
                 if (searchText != value)
                 {
                     SetProperty(ref searchText, value);
-                    System.Diagnostics.Debug.WriteLine($"SearchText changed to: '{value}'");
                     RefreshFilter();
                 }
             }
@@ -259,25 +254,20 @@ namespace NetworkService.ViewModel
 
         private void RefreshFilter()
         {
-            System.Diagnostics.Debug.WriteLine("Refreshing filter...");
 
             Application.Current.Dispatcher.Invoke(() =>
             {
                 if (ValvesView != null)
                 {
-                    //! IZMENA - umesto Filter delegata, pravimo filtriranu listu ručno
                     var filtered = Valves.Where(v =>
                     {
-                        // Filter po tipu
                         if (SelectedTypeIndex == 1 && v.Type != ValveType.CableSensor) return false;
                         if (SelectedTypeIndex == 2 && v.Type != ValveType.DigitalManometer) return false;
 
-                        // Filter po validaciji
                         if (SelectedFilterIndex == 1 && v.Validation != ValueValidation.Normal) return false;
                         if (SelectedFilterIndex == 2 && v.Validation != ValueValidation.High) return false;
                         if (SelectedFilterIndex == 3 && v.Validation != ValueValidation.Low) return false;
 
-                        // Filter po vrednosti
                         if (!string.IsNullOrWhiteSpace(SearchText) && int.TryParse(SearchText, out int value))
                         {
                             if (EqualChecked && v.MeasuredValue != value) return false;
@@ -288,10 +278,7 @@ namespace NetworkService.ViewModel
                         return true;
                     }).ToList();
 
-                    //! IZMENA - koristimo CustomView bez Filter-a
                     ValvesView = CollectionViewSource.GetDefaultView(filtered);
-
-                    System.Diagnostics.Debug.WriteLine($"Filter refreshed. Visible items: {ValvesView.Cast<object>().Count()}");
 
                     var previouslySelected = SelectedValve;
                     if (previouslySelected != null && Valves.Contains(previouslySelected))
@@ -299,21 +286,15 @@ namespace NetworkService.ViewModel
                         SelectedValve = previouslySelected;
                     }
                 }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("ValvesView is NULL in RefreshFilter!");
-                }
             });
         }
 
-        //! IZMENA - ovaj metod više nije potreban, ali ostavljam ga kao fallback
         private bool ValveFilter(object obj)
         {
-            return true; // Filter se više ne koristi jer LINQ filtrira kolekciju
+            return true;
         }
 
 
-        // Komande
         public MyICommand ResetCommand { get; }
         public MyICommand DeleteCommand { get; }
         public MyICommand UndoCommand { get; }
@@ -328,23 +309,8 @@ namespace NetworkService.ViewModel
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
             ValvesView = CollectionViewSource.GetDefaultView(Valves);
-            if (ValvesView == null)
-            {
-                System.Diagnostics.Debug.WriteLine("ValvesView je NULL!");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("ValvesView je inicijalizovan");
-            }
             ValvesView.Filter = ValveFilter;
             if (ValvesView.Filter == null)
-            {
-                System.Diagnostics.Debug.WriteLine("Filter NIJE postavljen!");
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Filter je postavljen");
-            }
             SelectedTypeIndex = 0;
             SelectedFilterIndex = 0;
             SearchText = string.Empty;
@@ -352,7 +318,6 @@ namespace NetworkService.ViewModel
             undoStack = historyRepository.UndoStack;
             historyDtoRepository = HistoryDtoRepository.Instance;
             historyDtos = historyDtoRepository.HistoryDtos;
-            System.Diagnostics.Debug.WriteLine("ViewModel konstruisan");
             this.ObserveWindow();
         }
 

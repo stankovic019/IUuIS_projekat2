@@ -64,7 +64,6 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref currentView, value);
         }
 
-        // Dugmići (visibility se rešava preko bool i Converters-a)
         private bool toolGridVisible;
         public bool ToolGridVisible
         {
@@ -81,7 +80,6 @@ namespace NetworkService.ViewModel
         public bool ClearBtnVisible { get; set; }
         public bool DiscardBtnVisible { get; set; }
 
-        // Komande
         public MyICommand ShowNotificationCommand { get; }
         public MyICommand HomeCommand { get; }
         public MyICommand NetEntitiesCommand { get; }
@@ -102,7 +100,6 @@ namespace NetworkService.ViewModel
             ClearBtnVisible = b7 == 1;
             DiscardBtnVisible = b8 == 1;
 
-            // osvežavanje property-ja
             OnPropertyChanged(nameof(AddBtnVisible));
             OnPropertyChanged(nameof(DeleteBtnVisible));
             OnPropertyChanged(nameof(UndoBtnVisible));
@@ -188,7 +185,7 @@ namespace NetworkService.ViewModel
             {
                 while (!AddEntityVM.OnClose)
                 {
-                    await Task.Delay(100); // čekaj 100ms da ne blokira UI
+                    await Task.Delay(100); 
                 }
             }
             catch (Exception ex)
@@ -223,7 +220,7 @@ namespace NetworkService.ViewModel
                     //if element is removed - do nothing - it will simulate that element, but wont affect application
                 }
             };
-            createListener(); //Povezivanje sa serverskom aplikacijom
+            createListener(); 
             NetworkEntitiesVM = new NetworkEntitiesViewModel();
             networkEntitiesViewInstance = new NetworkEntitiesView { DataContext = NetworkEntitiesVM };
             AddEntityVM = new AddEntityViewModel();
@@ -234,7 +231,7 @@ namespace NetworkService.ViewModel
             GraphCommand = new MyICommand(OnGraphCommand);
             ExitCommand = new MyICommand(OnExitCommand);
             AddCommand = new MyICommand(OnAddCommand);
-            OnHomeCommand(); // inital state
+            OnHomeCommand(); 
         }
 
         private void createListener()
@@ -250,22 +247,15 @@ namespace NetworkService.ViewModel
                     var tcpClient = tcp.AcceptTcpClient();
                     ThreadPool.QueueUserWorkItem(param =>
                     {
-                        //Prijem poruke
+
                         NetworkStream stream = tcpClient.GetStream();
                         string incomming;
                         byte[] bytes = new byte[1024];
                         int i = stream.Read(bytes, 0, bytes.Length);
-                        //Primljena poruka je sacuvana u incomming stringu
                         incomming = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
 
-                        //Ukoliko je primljena poruka pitanje koliko objekata ima u sistemu -> odgovor
                         if (incomming.Equals("Need object count"))
                         {
-                            //Response
-                            /* Umesto sto se ovde salje count.ToString(), potrebno je poslati 
-                             * duzinu liste koja sadrzi sve objekte pod monitoringom, odnosno
-                             * njihov ukupan broj (NE BROJATI OD NULE, VEC POSLATI UKUPAN BROJ)
-                             * */
                             Byte[] data = System.Text.Encoding.ASCII.GetBytes(MaxCount.ToString());
                             stream.Write(data, 0, data.Length);
                         }

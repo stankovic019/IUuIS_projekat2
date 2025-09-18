@@ -82,6 +82,7 @@ namespace NetworkService.ViewModel
                             }
 
                             TotalEntities = Valves.Count;
+                            RefreshFilter();
                         });
                     }
                     catch (Exception ex)
@@ -98,19 +99,18 @@ namespace NetworkService.ViewModel
         }
 
         // Filter UI properties
+        // Filter UI properties
         private int selectedTypeIndex;
         public int SelectedTypeIndex
         {
             get => selectedTypeIndex;
             set
             {
-                SetProperty(ref selectedTypeIndex, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh();
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (selectedTypeIndex != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref selectedTypeIndex, value);
+                    System.Diagnostics.Debug.WriteLine($"SelectedTypeIndex changed to: {value}");
+                    RefreshFilter();
                 }
             }
         }
@@ -121,15 +121,12 @@ namespace NetworkService.ViewModel
             get => selectedFilterIndex;
             set
             {
-                SetProperty(ref selectedFilterIndex, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh();
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (selectedFilterIndex != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref selectedFilterIndex, value);
+                    System.Diagnostics.Debug.WriteLine($"SelectedFilterIndex changed to: {value}");
+                    RefreshFilter();
                 }
-
             }
         }
 
@@ -139,21 +136,17 @@ namespace NetworkService.ViewModel
             get => searchText;
             set
             {
-                // Validacija: dozvoljava samo cifre i prazno
                 if (!string.IsNullOrEmpty(value) && !value.All(char.IsDigit))
                     return;
 
-                SetProperty(ref searchText, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh();
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (searchText != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref searchText, value);
+                    System.Diagnostics.Debug.WriteLine($"SearchText changed to: '{value}'");
+                    RefreshFilter();
                 }
             }
         }
-
 
         private bool equalChecked;
         public bool EqualChecked
@@ -161,15 +154,16 @@ namespace NetworkService.ViewModel
             get => equalChecked;
             set
             {
-                SetProperty(ref equalChecked, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh(); ;
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (equalChecked != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref equalChecked, value);
+                    if (value)
+                    {
+                        LessThanChecked = false;
+                        GreaterThanChecked = false;
+                    }
+                    RefreshFilter();
                 }
-
             }
         }
 
@@ -179,13 +173,15 @@ namespace NetworkService.ViewModel
             get => lessThanChecked;
             set
             {
-                SetProperty(ref lessThanChecked, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh();
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (lessThanChecked != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref lessThanChecked, value);
+                    if (value)
+                    {
+                        EqualChecked = false;
+                        GreaterThanChecked = false;
+                    }
+                    RefreshFilter();
                 }
             }
         }
@@ -196,15 +192,16 @@ namespace NetworkService.ViewModel
             get => greaterThanChecked;
             set
             {
-                SetProperty(ref greaterThanChecked, value);
-                if (ValvesView != null)
-                    ValvesView.Refresh();
-                var previouslySelected = SelectedValve;
-                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                if (greaterThanChecked != value)
                 {
-                    SelectedValve = previouslySelected;
+                    SetProperty(ref greaterThanChecked, value);
+                    if (value)
+                    {
+                        EqualChecked = false;
+                        LessThanChecked = false;
+                    }
+                    RefreshFilter();
                 }
-
             }
         }
 
@@ -260,29 +257,59 @@ namespace NetworkService.ViewModel
             private set => SetProperty(ref valvesView, value);
         }
 
+        private void RefreshFilter()
+        {
+            System.Diagnostics.Debug.WriteLine("Refreshing filter...");
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (ValvesView != null)
+                {
+                    //! IZMENA - umesto Filter delegata, pravimo filtriranu listu ručno
+                    var filtered = Valves.Where(v =>
+                    {
+                        // Filter po tipu
+                        if (SelectedTypeIndex == 1 && v.Type != ValveType.CableSensor) return false;
+                        if (SelectedTypeIndex == 2 && v.Type != ValveType.DigitalManometer) return false;
+
+                        // Filter po validaciji
+                        if (SelectedFilterIndex == 1 && v.Validation != ValueValidation.Normal) return false;
+                        if (SelectedFilterIndex == 2 && v.Validation != ValueValidation.High) return false;
+                        if (SelectedFilterIndex == 3 && v.Validation != ValueValidation.Low) return false;
+
+                        // Filter po vrednosti
+                        if (!string.IsNullOrWhiteSpace(SearchText) && int.TryParse(SearchText, out int value))
+                        {
+                            if (EqualChecked && v.MeasuredValue != value) return false;
+                            if (LessThanChecked && v.MeasuredValue >= value) return false;
+                            if (GreaterThanChecked && v.MeasuredValue <= value) return false;
+                        }
+
+                        return true;
+                    }).ToList();
+
+                    //! IZMENA - koristimo CustomView bez Filter-a
+                    ValvesView = CollectionViewSource.GetDefaultView(filtered);
+
+                    System.Diagnostics.Debug.WriteLine($"Filter refreshed. Visible items: {ValvesView.Cast<object>().Count()}");
+
+                    var previouslySelected = SelectedValve;
+                    if (previouslySelected != null && Valves.Contains(previouslySelected))
+                    {
+                        SelectedValve = previouslySelected;
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("ValvesView is NULL in RefreshFilter!");
+                }
+            });
+        }
+
+        //! IZMENA - ovaj metod više nije potreban, ali ostavljam ga kao fallback
         private bool ValveFilter(object obj)
         {
-            Valve v = obj as Valve;
-            if (v == null) return false;
-
-            // filter po tipu
-            if (SelectedTypeIndex == 1 && v.Type != ValveType.CableSensor) return false;
-            if (SelectedTypeIndex == 2 && v.Type != ValveType.DigitalManometer) return false;
-
-            // filter po validaciji
-            if (SelectedFilterIndex == 1 && v.Validation != ValueValidation.Normal) return false;
-            if (SelectedFilterIndex == 2 && v.Validation != ValueValidation.High) return false;
-            if (SelectedFilterIndex == 3 && v.Validation != ValueValidation.Low) return false;
-
-            // filter po vrednosti
-            if (!string.IsNullOrWhiteSpace(SearchText) && int.TryParse(SearchText, out int value))
-            {
-                if (EqualChecked && v.MeasuredValue != value) return false;
-                if (LessThanChecked && v.MeasuredValue >= value) return false;
-                if (GreaterThanChecked && v.MeasuredValue <= value) return false;
-            }
-
-            return true;
+            return true; // Filter se više ne koristi jer LINQ filtrira kolekciju
         }
 
 
@@ -301,11 +328,31 @@ namespace NetworkService.ViewModel
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
             ValvesView = CollectionViewSource.GetDefaultView(Valves);
+            if (ValvesView == null)
+            {
+                System.Diagnostics.Debug.WriteLine("ValvesView je NULL!");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("ValvesView je inicijalizovan");
+            }
             ValvesView.Filter = ValveFilter;
+            if (ValvesView.Filter == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Filter NIJE postavljen!");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Filter je postavljen");
+            }
+            SelectedTypeIndex = 0;
+            SelectedFilterIndex = 0;
+            SearchText = string.Empty;
             historyRepository = HistoryRepository.Instance;
             undoStack = historyRepository.UndoStack;
             historyDtoRepository = HistoryDtoRepository.Instance;
             historyDtos = historyDtoRepository.HistoryDtos;
+            System.Diagnostics.Debug.WriteLine("ViewModel konstruisan");
             this.ObserveWindow();
         }
 

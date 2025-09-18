@@ -1,0 +1,8 @@
+﻿Press CTRL with any of the following characters: H, T, D, G to switch through the windows
+HCI Project 2 by Dimitrije Stanković, PR81/2022
+To add new entity, open 'Network Entities' and press CTRL + N
+To delete entity, select it and press SHIFT + DELETE
+To undo all changes and go back to the beginning or to the selected item in history, press CTRL + SHIFT + Z
+Press CTRL + E to exit application, and perform all changes to the entities
+To connect items in 'Network Display', right mouse click on first and then right mouse click on second
+To also connect items in 'Network Display', press the corresponding F key for the first one, and then the corresponding F key to the second one

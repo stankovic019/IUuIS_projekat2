@@ -14,16 +14,23 @@ using System.ComponentModel;
 using System.Windows.Data;
 using NetworkService.Services;
 using NetworkService.Services.UndoServices;
+using NetworkService.DTOs;
 
 namespace NetworkService.ViewModel
 {
     public class NetworkEntitiesViewModel : BindableBase
     {
-        private Stack<IUndoService> undoStack = new Stack<IUndoService>();
-
+        private HistoryRepository historyRepository;
+        private Stack<IUndoService> undoStack;
+        private HistoryDtoRepository historyDtoRepository;
+        private ObservableCollection<HistoryDto> historyDtos;
+        public ObservableCollection<HistoryDto> HistoryDtos
+        {
+            get => historyDtos;
+        }
         ValveRepository valveRepository;
-        private ObservableCollection<Valve> valves = new ObservableCollection<Valve>();
-        public ObservableCollection<Valve> Valves { get; } = new ObservableCollection<Valve>();
+        public ObservableCollection<Valve> Valves { get; private set; }
+
 
         private readonly object fileLock = new object();
 
@@ -69,7 +76,6 @@ namespace NetworkService.ViewModel
                             }
 
                             var previouslySelected = SelectedValve;
-                            ValvesView.Refresh();
                             if (previouslySelected != null && Valves.Contains(previouslySelected))
                             {
                                 SelectedValve = previouslySelected;
@@ -99,7 +105,13 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref selectedTypeIndex, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh();
                 var previouslySelected = SelectedValve;
+                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                {
+                    SelectedValve = previouslySelected;
+                }
             }
         }
 
@@ -110,8 +122,9 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref selectedFilterIndex, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh();
                 var previouslySelected = SelectedValve;
-                ValvesView.Refresh();
                 if (previouslySelected != null && Valves.Contains(previouslySelected))
                 {
                     SelectedValve = previouslySelected;
@@ -131,7 +144,13 @@ namespace NetworkService.ViewModel
                     return;
 
                 SetProperty(ref searchText, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh();
                 var previouslySelected = SelectedValve;
+                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                {
+                    SelectedValve = previouslySelected;
+                }
             }
         }
 
@@ -143,8 +162,9 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref equalChecked, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh(); ;
                 var previouslySelected = SelectedValve;
-                ValvesView.Refresh();
                 if (previouslySelected != null && Valves.Contains(previouslySelected))
                 {
                     SelectedValve = previouslySelected;
@@ -160,7 +180,13 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref lessThanChecked, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh();
                 var previouslySelected = SelectedValve;
+                if (previouslySelected != null && Valves.Contains(previouslySelected))
+                {
+                    SelectedValve = previouslySelected;
+                }
             }
         }
 
@@ -171,8 +197,9 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref greaterThanChecked, value);
+                if (ValvesView != null)
+                    ValvesView.Refresh();
                 var previouslySelected = SelectedValve;
-                ValvesView.Refresh();
                 if (previouslySelected != null && Valves.Contains(previouslySelected))
                 {
                     SelectedValve = previouslySelected;
@@ -181,7 +208,6 @@ namespace NetworkService.ViewModel
             }
         }
 
-        // Total entities count binding
         private int totalEntities;
         public int TotalEntities
         {
@@ -200,6 +226,20 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref selectedValve, value);
         }
 
+        private HistoryDto selectedHistoryItem = new HistoryDto(string.Empty, "");
+        public HistoryDto SelectedHistoryItem
+        {
+            get => selectedHistoryItem;
+            set
+            {
+                if (selectedHistoryItem != value)
+                {
+                    selectedHistoryItem = value;
+                    OnPropertyChanged(nameof(SelectedHistoryItem));
+                }
+            }
+        }
+
         private bool isActive;
         public bool IsActive
         {
@@ -208,7 +248,8 @@ namespace NetworkService.ViewModel
             {
                 SetProperty(ref isActive, value);
                 if (isActive)
-                    ValvesView.Refresh();
+                    if (ValvesView != null)
+                        ValvesView.Refresh();
             }
         }
 
@@ -263,25 +304,35 @@ namespace NetworkService.ViewModel
             Valves = valveRepository.Valves;
             ValvesView = CollectionViewSource.GetDefaultView(Valves);
             ValvesView.Filter = ValveFilter;
+            historyRepository = HistoryRepository.Instance;
+            undoStack = historyRepository.UndoStack;
+            historyDtoRepository = HistoryDtoRepository.Instance;
+            historyDtos = historyDtoRepository.HistoryDtos;
             this.ObserveWindow();
         }
 
         private void OnReset()
         {
-            if (MessageBox.Show("Reset all filters?\nYou will need to set them up again.", "Clear filters?", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+            try
             {
-                SelectedTypeIndex = 0;
-                EqualChecked = false;
-                LessThanChecked = false;
-                GreaterThanChecked = false;
-                SearchText = string.Empty;
-                SelectedFilterIndex = 0;
+                if (MessageBox.Show("Reset all filters?\nYou will need to set them up again.", "Clear filters?", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
+                    SelectedTypeIndex = 0;
+                    EqualChecked = false;
+                    LessThanChecked = false;
+                    GreaterThanChecked = false;
+                    SearchText = string.Empty;
+                    SelectedFilterIndex = 0;
+                    SelectedHistoryItem = new HistoryDto(string.Empty, ""); ;
+                }
+            }catch(Exception ex)
+            {
+                NotificationService.Instance.ShowError("Error while reseting filters. Try again later.", "ERROR Reset");
             }
         }
 
         private void OnAdd()
         {
-            // neće raditi ako view nije aktivan
             if (!IsActive) return;
 
             MessageBox.Show("add nigga :D");
@@ -291,42 +342,112 @@ namespace NetworkService.ViewModel
         {
             if (!IsActive) return;
             if (SelectedValve == null) return;
-
-            if (MessageBox.Show($"Do you really wanna delete Valve: {SelectedValve.Id} : {SelectedValve.Name} ?\n" +
-                $"This change is irreversible?", $"Delete Valve {SelectedValve.Id}", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
-                int id = SelectedValve.Id;
-                undoStack.Push(new DeleteValve(this.Valves, SelectedValve));
-                Valves.Remove(SelectedValve);
-                ValvesView.Refresh();
-                if(!Valves.Contains(SelectedValve))
-                    NotificationService.Instance.ShowSuccess($"Valve {id} deleted", "SUCCESS Delete");
-                else
-                    NotificationService.Instance.ShowError($"Valve {id} is not deleted", "ERROR Delete");
+            try
+            {
+                if (MessageBox.Show($"Do you really wanna delete Valve: {SelectedValve.Id} : {SelectedValve.Name} ?", $"Delete Valve {SelectedValve.Id}", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    int id = SelectedValve.Id;
+                    IUndoService deleteValve = new DeleteValve(this.Valves, SelectedValve);
+                    if (deleteValve.Action())
+                    {
+                        undoStack.Push(deleteValve);
+                        HistoryDtos.Insert(0, new HistoryDto(deleteValve.getTitle(), deleteValve.getDateTime()));
+                        if (ValvesView != null)
+                            ValvesView.Refresh();
+                    }
+                }
+            }
+            catch (Exception ex) {
+                NotificationService.Instance.ShowError($"Error while Deleting {SelectedValve}, try again later", "ERROR Delete");
             }
         }
 
         private void OnUndo()
         {   
             if(!IsActive) return;
-
-            if (undoStack.Any())
+            try
             {
-                IUndoService action = undoStack.Pop();
-                action.Undo();
+                if (undoStack.Any())
+                {
+                    IUndoService action = undoStack.Pop();
+                    if (action.Undo())
+                    {   
+                        HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                        HistoryDtos.Remove(forDelete);
+                        if (ValvesView != null)
+                            ValvesView.Refresh();
+                    }
+                    else
+                    {
+                        undoStack.Push(action);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                NotificationService.Instance.ShowError("Error in Undo, try again later", "ERROR Undo");
             }
         }
 
         private void OnUndoAll()
         {
             if (!IsActive) return;
-
-            if (MessageBox.Show("Do you want to Undo All changes and go back to the beginning?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            try
             {
-                while (undoStack.Any())
+                if (SelectedHistoryItem.ActionName == string.Empty)
                 {
-                    var action = undoStack.Pop();
-                    action.Undo();
+                    if (MessageBox.Show("Do you want to Undo All changes and go back to the beginning?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        while (undoStack.Any())
+                        {
+                            IUndoService action = undoStack.Pop();
+                            if (action.Undo())
+                            {
+                                HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                HistoryDtos.Remove(forDelete);
+                                if (ValvesView != null)
+                                    ValvesView.Refresh();
+                            }
+                            else
+                            {
+                                undoStack.Push(action);
+                            }
+                        }
+                    }
                 }
+                else if (SelectedHistoryItem.ActionName != string.Empty)
+                {
+                    if (MessageBox.Show($"Do you want to Undo All changes and go back to {SelectedHistoryItem.ActionName}?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        HistoryDto item;
+                        do
+                        {
+                            item = HistoryDtos.ElementAt(0);
+                            if (item.ActionName != SelectedHistoryItem.ActionName)
+                            {
+                                IUndoService action = undoStack.Pop();
+                                if (action.Undo())
+                                {
+                                    HistoryDto forDelete = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                    HistoryDtos.Remove(forDelete);
+                                    if (ValvesView != null)
+                                        ValvesView.Refresh();
+                                }
+                                else
+                                {
+                                    undoStack.Push(action);
+                                }
+                            }
+                        } while (item.ActionName != SelectedHistoryItem.ActionName);
+                    }
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
+                NotificationService.Instance.ShowError("Error in Undo All, try again later.", "ERROR Undo all");
+            }
+            finally
+            {
+                selectedHistoryItem = new HistoryDto(string.Empty, "");
             }
         }
 

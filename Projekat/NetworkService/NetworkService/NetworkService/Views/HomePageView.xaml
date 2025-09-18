@@ -18,8 +18,9 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Margin="0 0 0 5">
@@ -72,18 +73,63 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Recent History" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+                <TextBlock Grid.Row="0" Text="Recent Changes" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
 
                 <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
-                <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center">
+                <DataGrid x:Name="recentChangesTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" ItemsSource="{Binding LastThreeValves}" Height="93" VerticalScrollBarVisibility="Disabled">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Validation}" Value="Low">
+                                    <Setter Property="Background" Value="LightCoral"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Validation}" Value="High">
+                                    <Setter Property="Background" Value="LightCoral"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Timestamp" Binding="{Binding}" Width="*" FontFamily="Courier New"/>
-                        <DataGridTextColumn Header="Action" Binding="{Binding}" Width="*" FontFamily="Courier New" />
-                        <DataGridTextColumn Header="Status" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
-                        <DataGridTextColumn Header="Undo" Binding="{Binding}" Width="0.3*" FontFamily="Courier New"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="0.2*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18" />
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18"/>
+                        <DataGridTextColumn Header="From" Binding="{Binding LastValue}" Width="0.2*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18" />
+                        <DataGridTextColumn Header="To" Binding="{Binding MeasuredValue}" Width="0.2*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18" />
+                        <DataGridTextColumn Header="Timestamp" Binding="{Binding DateTime}" Width="*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18" />
+                        <DataGridTextColumn Header="Status" Binding="{Binding Validation}" Width="*" FontFamily="Courier New" FontWeight="DemiBold" FontSize="18" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
+
+
+            <Grid Grid.Row="2" Margin="0 5 0 5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" SharedSizeGroup="HeaderRow"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Recent History" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+
+                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
+                <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="118" ItemsSource="{Binding HistoryDtos}" VerticalScrollBarVisibility="Disabled">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Action" Binding="{Binding ActionName}" Width="*" FontFamily="Courier New" FontSize="25" FontWeight="DemiBold"/>
+                        <DataGridTextColumn Header="Timestamp" Binding="{Binding TimeStamp}" Width="*" FontFamily="Courier New" FontSize="25" FontWeight="DemiBold"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="3" Margin="0 5 0 5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" SharedSizeGroup="HeaderRow"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Tool Tips" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
+                <TextBlock Grid.Row="1" Text="{Binding ToolTip}" FontSize="25" FontFamily="Courier New" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="10 10" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+            </Grid>
+
         </Grid>
     </Border>
 </UserControl>

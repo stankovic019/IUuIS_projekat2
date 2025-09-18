@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DTOs\HistoryDto.cs" />
     <Compile Include="Helpers\BindableBase.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -71,6 +72,8 @@
     <Compile Include="Helpers\MyICommand.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Repositories\HistoryDtoRepository.cs" />
+    <Compile Include="Repositories\HistoryRepository.cs" />
     <Compile Include="Services\NotificationService\NotificationService.cs" />
     <Compile Include="Helpers\ValidationBase.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -204,7 +207,14 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="public\files\Valves.txt" />
+    <Resource Include="public\files\Valves.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="public\files\ToolTips.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

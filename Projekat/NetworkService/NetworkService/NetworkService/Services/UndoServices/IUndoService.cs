@@ -10,6 +10,9 @@ namespace NetworkService.Services.UndoServices
 {
     public interface IUndoService
     {
-        void Undo();
+        bool Action();
+        bool Undo();
+        string getTitle();
+        string getDateTime();
     }
 }

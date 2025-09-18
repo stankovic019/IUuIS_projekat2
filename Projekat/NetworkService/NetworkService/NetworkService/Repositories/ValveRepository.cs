@@ -24,7 +24,7 @@ namespace NetworkService.Repositories
             }
         }
 
-        private readonly ObservableCollection<Valve> valves;
+        private ObservableCollection<Valve> valves;
 
         private ValveRepository()
         {
@@ -46,7 +46,7 @@ namespace NetworkService.Repositories
 
         }
 
-        public ObservableCollection<Valve> Valves { get { return valves; } }
+        public ObservableCollection<Valve> Valves { get { return valves; } private set { } }
 
         public void StoreValves()
         {

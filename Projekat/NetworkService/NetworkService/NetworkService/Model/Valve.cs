@@ -17,6 +17,7 @@ namespace NetworkService.Model
         private string name;
         private ValveType type;
         private int measuredValue;
+        private int lastValue;
         private ValueValidation validation;
         private string dateTime;
 
@@ -30,9 +31,21 @@ namespace NetworkService.Model
             this.DateTime = dateTime;
 
         }
+        
+        public Valve(Valve v)
+        {
+            this.Id = v.Id;
+            this.Name = v.Name;
+            this.Type = v.Type;
+            this.MeasuredValue = v.MeasuredValue;
+            this.DateTime = v.DateTime;
+            this.LastValue = v.LastValue;
+        }
+
 
         public void updateValues(int measuredValue, string dateTime)
         {
+            this.LastValue = this.MeasuredValue;
             this.MeasuredValue = measuredValue;
             this.DateTime = dateTime;
         }
@@ -94,6 +107,20 @@ namespace NetworkService.Model
                 }
             }
         }
+
+        public int LastValue
+        {
+            get { return lastValue; }
+            set
+            {
+                if (lastValue != value)
+                {
+                    lastValue = value;
+                    OnPropertyChanged("LastValue");
+                }
+            }
+        }
+
 
         public ValueValidation Validation
         {

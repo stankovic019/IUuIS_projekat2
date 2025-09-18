@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("public/files/valves.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("public/files/tooltips.txt")]
 
 

@@ -1,0 +1,428 @@
+﻿ <UserControl x:Class="NetworkService.Views.NetworkDisplayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dto="clr-namespace:NetworkService.DTOs"
+             xmlns:model="clr-namespace:NetworkService.Model"
+             xmlns:viewModel="clr-namespace:NetworkService.ViewModel"
+             xmlns:local="clr-namespace:NetworkService.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="727" d:DesignWidth="900">
+
+    <UserControl.DataContext>
+        <viewModel:NetworkDisplayViewModel/>
+    </UserControl.DataContext>
+
+    <Border Padding="10">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock Text="  Valves  " FontSize="40" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold" TextDecorations="Underline"/>
+                <ListView x:Name="listViewEntityList" BorderThickness="3" Margin="0 50 0 0"  SelectedItem="{Binding SelectedValve}" FontFamily="Courier New">
+                    <ListView.Resources>
+                        <!-- Define grouping by Type -->
+                        <CollectionViewSource x:Key="GroupedValves" Source="{Binding ValvesInList}">
+                            <CollectionViewSource.GroupDescriptions>
+                                <PropertyGroupDescription PropertyName="Type"/>
+                            </CollectionViewSource.GroupDescriptions>
+                        </CollectionViewSource>
+                    </ListView.Resources>
+                    <ListView.ItemsSource>
+                        <Binding Source="{StaticResource GroupedValves}"/>
+                    </ListView.ItemsSource>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="16" Padding="5,0,0,0" IsHitTestVisible="False"/>
+                                    <!-- Prevent selecting header -->
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Padding="20,0,0,0" FontSize="14"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding SelectionChanged}" 
+                                   CommandParameter="{Binding ElementName=listViewEntityList}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListView>
+            </Grid>
+
+
+            <Grid Grid.Column="1">
+                <Canvas Width="390" Height="520">
+                    <StackPanel Orientation="Horizontal" Width="390" Height="520" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Vertical" Margin="0,0,35,0">
+                            <!-- Canvas 0 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[0]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="0" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[0]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="0"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[0]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 3 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[3]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="3" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[3]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="3"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[3]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 6 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[6]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="6" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[6]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="6"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[6]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 9 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[9]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="9" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[9]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="9"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[9]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- KOLONA 2 (Canvas 1,4,7,10) -->
+                        <StackPanel Orientation="Vertical" Margin="0,0,35,0">
+                            <!-- Canvas 1 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[1]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="1" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[1]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="1"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[1]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 4 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[4]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="4" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[4]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="4"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[4]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 7 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[7]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="7" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[7]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="7"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[7]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 10 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[10]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="10" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[10]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="10"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[10]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- KOLONA 3 (Canvas 2,5,8,11) -->
+                        <StackPanel Orientation="Vertical">
+                            <!-- Canvas 2 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[2]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35"  AllowDrop="True" Tag="2" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[2]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="2"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[2]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 5 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[5]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="5" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[5]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="5"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[5]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 8 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[8]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="8" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[8]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="8"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[8]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+
+                            <!-- Canvas 11 -->
+                            <Border BorderBrush="{Binding BorderBrushCollection[11]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="11" Background="Transparent">
+                                <StackPanel>
+                                    <ContentControl Content="{Binding CanvasCollection[11]}" />
+                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="11"/>
+                                    <TextBlock Text="{Binding DescriptionCollection[11]}" Margin="2,105,0,0"/>
+                                </StackPanel>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DragOver">
+                                        <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseRightButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding RightMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Border>
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <!-- LINES -->
+                    <ItemsControl ItemsSource="{Binding LineCollection}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Width="390" Height="520"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}" Stroke="Black" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Canvas>
+            </Grid>
+            
+            <Grid Grid.Column="2">
+                <TextBlock Text=" History " FontSize="40" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold" TextDecorations="Underline"/>
+                <ListBox ScrollViewer.CanContentScroll="True" Margin="0 50 0 0" FontFamily="Courier New" FontWeight="DemiBold" ItemsSource="{Binding HistoryDtos}" SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}" BorderThickness="3">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ActionName}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

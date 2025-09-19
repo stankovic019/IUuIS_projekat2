@@ -67,6 +67,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DTOs\HistoryDto.cs" />
+    <Compile Include="DTOs\ValveGroupDto.cs" />
     <Compile Include="Helpers\BindableBase.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
@@ -74,6 +75,7 @@
     <Compile Include="Helpers\MyICommand.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Model\NewLine.cs" />
     <Compile Include="Repositories\HistoryDtoRepository.cs" />
     <Compile Include="Repositories\HistoryRepository.cs" />
     <Compile Include="Services\NotificationService\NotificationService.cs" />
@@ -101,8 +103,8 @@
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NetworkDisplayPage.xaml.cs">
-      <DependentUpon>NetworkDisplayPage.xaml</DependentUpon>
+    <Compile Include="Views\NetworkDisplayView.xaml.cs">
+      <DependentUpon>NetworkDisplayView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NetworkEntitiesView.xaml.cs">
       <DependentUpon>NetworkEntitiesView.xaml</DependentUpon>
@@ -130,7 +132,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\NetworkDisplayPage.xaml">
+    <Page Include="Views\NetworkDisplayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -229,6 +231,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="public\icons\clear-icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="public\pics\cablesensor.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="public\pics\digitalmanometer.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

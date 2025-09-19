@@ -135,7 +135,7 @@ namespace NetworkService.ViewModel
             Title = "Network Display";
             HeaderIcon = "/public/icons/network-display-icon.png";
             SetButtons(1, 0, 0, 1, 1, 0, 0, 0, 0);
-            CurrentView = new NetworkDisplayPage();
+            CurrentView = new NetworkDisplayView();
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
         }

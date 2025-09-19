@@ -235,10 +235,24 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="public\pics\cablesensor.jpg">
+    <Resource Include="public\pics\cablesensor1.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="public\pics\digitalmanometer.jpg">
+    <Resource Include="public\pics\digitalmanometer1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="public\pics\cablesensor2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="public\pics\cablesensor3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="public\pics\digitalmanometer2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="public\pics\digitalmanometer3.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

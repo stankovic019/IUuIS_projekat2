@@ -2,6 +2,7 @@
 using NetworkService.Helpers;
 using NetworkService.Model;
 using NetworkService.Repositories;
+using NetworkService.Services.UndoServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,8 +24,42 @@ namespace NetworkService.ViewModel
 {
     public class NetworkDisplayViewModel : BindableBase
     {
-        #region Initialize
+
+        private bool isActive;
+        public bool IsActive
+        {
+            get => isActive;
+            set =>  SetProperty(ref isActive, value);
+        }
+
+        private ValveRepository valveRepository;
+        public ObservableCollection<Valve> Valves { get; private set; }
         public ObservableCollection<Valve> ValvesInList { get; set; }
+        
+        private HistoryRepository historyRepository;
+        private Stack<IUndoService> undoStack { get; }
+
+        private HistoryDtoRepository historyDtoRepository;
+        private ObservableCollection<HistoryDto> historyDtos;
+        public ObservableCollection<HistoryDto> HistoryDtos
+        {
+            get => historyDtos;
+        }
+
+        private HistoryDto selectedHistoryItem = new HistoryDto(string.Empty, "");
+        public HistoryDto SelectedHistoryItem
+        {
+            get => selectedHistoryItem;
+            set
+            {
+                if (selectedHistoryItem != value)
+                {
+                    selectedHistoryItem = value;
+                    OnPropertyChanged(nameof(SelectedHistoryItem));
+                }
+            }
+        }
+
         public ObservableCollection<ValveGroupDto> GroupedValves { get; set; }
         public ObservableCollection<Brush> BorderBrushCollection { get; set; }
         public ObservableCollection<Canvas> CanvasCollection { get; set; }
@@ -43,7 +79,8 @@ namespace NetworkService.ViewModel
         public MyICommand<object> SelectionChanged { get; set; }
         public MyICommand<object> FreeCanvas { get; set; }
         public MyICommand<object> RightMouseButtonDownOnCanvas { get; set; }
-        //public MyICommand OrganizeAllCommand { get; set; }
+        public MyICommand UndoCommand { get; }
+        public MyICommand UndoAllCommand { get; }
 
         private bool isLineSourceSelected = false;
         private int sourceCanvasIndex = -1;
@@ -54,19 +91,28 @@ namespace NetworkService.ViewModel
 
         public NetworkDisplayViewModel()
         {
-            ValvesInList = new ObservableCollection<Valve>
+            valveRepository = ValveRepository.Instance;
+            Valves = valveRepository.Valves;
+            ValvesInList = new ObservableCollection<Valve>();
+
+            foreach(Valve v in Valves)
             {
-            ValveRepository.Instance.Valves.ElementAt(0),
-            ValveRepository.Instance.Valves.ElementAt(2)
-            };
-            ValvesInList.CollectionChanged += (s, e) => BuildGroupedValves();
-            BuildGroupedValves();
+                ValvesInList.Add(new Valve(v)); //making copy of an object for his manipulation
+            }
+
+
+            historyRepository = HistoryRepository.Instance;
+            undoStack = historyRepository.UndoStack;
+            historyDtoRepository = HistoryDtoRepository.Instance;
+            historyDtos = historyDtoRepository.HistoryDtos;
 
             LineCollection = new ObservableCollection<NewLine>();
             CanvasCollection = new ObservableCollection<Canvas>();
             BorderBrushCollection = new ObservableCollection<Brush>();
             DescriptionCollection = new ObservableCollection<string>();
+
             BuildGroupedValves();
+
             for (int i = 0; i < 12; i++)
             {
                 BorderBrushCollection.Add(Brushes.Black);
@@ -78,7 +124,7 @@ namespace NetworkService.ViewModel
                     Background = Brushes.Transparent
                 });
 
-                DescriptionCollection.Add(" ");
+                DescriptionCollection.Add("");
             }
 
             DragOverCanvas = new MyICommand<object>(OnDragOverCanvas);
@@ -88,9 +134,12 @@ namespace NetworkService.ViewModel
             SelectionChanged = new MyICommand<object>(OnSelectionChanged);
             FreeCanvas = new MyICommand<object>(OnFreeCanvas);
             RightMouseButtonDownOnCanvas = new MyICommand<object>(OnRightMouseButtonDown);
+            //UndoCommand = new MyICommand(OnUndo);
+            //UndoAllCommand = new MyICommand(OnUndoAll);
+
+            this.Observer();
 
         }
-        #endregion
 
         private void BuildGroupedValves()
         {
@@ -104,9 +153,6 @@ namespace NetworkService.ViewModel
             GroupedValves = new ObservableCollection<ValveGroupDto>(groups);
         }
 
-
-
-
         private void OnDragOverCanvas(object parameter)
         {
             if (parameter is DragEventArgs e)
@@ -116,9 +162,6 @@ namespace NetworkService.ViewModel
             }
         }
 
-
-
-        #region Helper/GetCanvasIndexForEntityId
         public int GetCanvasIndexForValveId(int id)
         {
             for (int i = 0; i < CanvasCollection.Count; i++)
@@ -132,20 +175,15 @@ namespace NetworkService.ViewModel
             }
             return -1;
         }
-        #endregion
 
-        #region OnDrop
+
         private void OnDrop(object parameter)
         {
-            MessageBox.Show("eo");
-
             if (draggedValve != null)
             {
                 int index = Convert.ToInt32(parameter);
 
-                string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{draggedValve.Type.ToString().ToLower()}.jpg";
-                MessageBox.Show(path);
-
+                string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{draggedValve.Type.ToString().ToLower()}{new Random().Next(1,4)}.jpg";
 
                 if (CanvasCollection[index].Resources["taken"] == null)
                 {
@@ -161,19 +199,21 @@ namespace NetworkService.ViewModel
                     {
                         Source = logo,
                         Stretch = Stretch.UniformToFill,
-                        Width = 100,
-                        Height = 100
+                        Width = 95,
+                        Height = 95
                     };
 
                     // Clear any old children (if the canvas already had something)
                     CanvasCollection[index].Children.Clear();
                     CanvasCollection[index].Children.Add(img);
 
+                    Valve observableValve = Valves.FirstOrDefault(v => v.Id == draggedValve.Id); //getting the real observable object
+
                     // Mark canvas as taken
                     CanvasCollection[index].Resources["taken"] = true;
-                    CanvasCollection[index].Resources["data"] = draggedValve;
-                    BorderBrushCollection[index] = draggedValve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
-                    DescriptionCollection[index] = ($"ID: {draggedValve.Id} Value: {draggedValve.MeasuredValue}");
+                    CanvasCollection[index].Resources["data"] = observableValve;
+                    BorderBrushCollection[index] = observableValve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
+                    DescriptionCollection[index] = $"ID: {observableValve.Id} Value: {observableValve.MeasuredValue}";
 
                     // PREVLACENJE IZ DRUGOG CANVASA
                     if (draggingSourceIndex != -1)
@@ -202,6 +242,7 @@ namespace NetworkService.ViewModel
                     }
 
                     //PREVLACENJE IZ LISTE
+                    //deletin dragged object from list (not the real one)
                     if (ValvesInList.Contains(draggedValve))
                     {
                         ValvesInList.Remove(draggedValve);
@@ -210,30 +251,47 @@ namespace NetworkService.ViewModel
             }
         }
 
-        #endregion
-
-        #region UpdateValveOnCanvas
-        public void UpdateEntityOnCanvas(Valve valve)
+        private void Observer()
         {
-            int canvasIndex = GetCanvasIndexForValveId(valve.Id);
+            var observeThread = new Thread(
 
-            if (canvasIndex != -1)
-            {
-                DescriptionCollection[canvasIndex] = ($"ID: {valve.Id} Value: {valve.MeasuredValue}");
-                if (valve.Validation == ValueValidation.Normal)
+                () =>
                 {
-                    BorderBrushCollection[canvasIndex] = Brushes.Black;
-                }
-                else
-                {
-                    BorderBrushCollection[canvasIndex] = Brushes.Red;
-                }
-            }
+                    while (true)
+                    {
+                        try
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+
+                                foreach (Valve v in Valves)
+                                {
+                                    int idx = GetCanvasIndexForValveId(v.Id);
+
+                                    if (idx != -1)
+                                    {
+                                        DescriptionCollection[idx] = $"ID: {v.Id} Value: {v.MeasuredValue}";
+                                        BorderBrushCollection[idx] = v.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
+                                    }
+                                }
+
+                                for(int i = 0; i < 12; ++i)
+                                {
+                                    if (!Valves.Contains(CanvasCollection[i].Resources["data"] as Valve))
+                                        this.OnFreeCanvas(i);
+                                }
+
+
+                            });
+                        }catch(Exception ex) { }
+
+                        Thread.Sleep(100);
+                    }
+                });
+            observeThread.IsBackground = true;
+            observeThread.Start();
         }
-        #endregion
 
-        #region Delete
-        //MainWindowViewModel
         public void DeleteValveFromCanvas(Valve valve)
         {
             int canvasIndex = GetCanvasIndexForValveId(valve.Id);
@@ -289,7 +347,7 @@ namespace NetworkService.ViewModel
                 CanvasCollection[index].Background = Brushes.Transparent;
                 CanvasCollection[index].Resources.Remove("taken");
                 CanvasCollection[index].Resources.Remove("data");
-                BorderBrushCollection[index] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E1F22"));
+                BorderBrushCollection[index] = Brushes.Black;
                 DescriptionCollection[index] = ($" ");
             }
         }
@@ -298,9 +356,7 @@ namespace NetworkService.ViewModel
             get => selectedValve;
             set => SetProperty(ref selectedValve, value);
         }
-        #endregion
 
-        #region LeftMouseBTN
         private void OnLeftMouseButtonDown(object parameter)
         {
             if (!dragging && parameter is UIElement uiElement)
@@ -320,7 +376,6 @@ namespace NetworkService.ViewModel
             }
         }
 
-
         private void OnMouseLeftButtonUp()
         {
             draggedValve = null;
@@ -328,9 +383,7 @@ namespace NetworkService.ViewModel
             dragging = false;
             draggingSourceIndex = -1;
         }
-        #endregion
 
-        #region SelectionChanged
         private void OnSelectionChanged(object parameter)
         {
             if (!dragging)
@@ -340,9 +393,7 @@ namespace NetworkService.ViewModel
                 DragDrop.DoDragDrop((ListView)parameter, draggedValve, DragDropEffects.Move);
             }
         }
-        #endregion
 
-        #region RightMouseButton
         private void OnRightMouseButtonDown(object parameter)
         {
             int index = Convert.ToInt32(parameter);
@@ -412,9 +463,7 @@ namespace NetworkService.ViewModel
                 currentLine = new NewLine();
             }
         }
-        #endregion
 
-        #region Line
         private void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)
         {
             for (int i = 0; i < LineCollection.Count; i++)
@@ -473,7 +522,5 @@ namespace NetworkService.ViewModel
             }
             return new Point(x, y);
         }
-        #endregion
-
     }
 }

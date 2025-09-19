@@ -72,24 +72,28 @@
 
 
             <Grid Grid.Column="1">
-                <Canvas Width="390" Height="520">
-                    <StackPanel Orientation="Horizontal" Width="390" Height="520" HorizontalAlignment="Left">
+                <Canvas Width="370" Height="560">
+                    <StackPanel Orientation="Horizontal" Width="390" Height="560" HorizontalAlignment="Left">
                         <StackPanel Orientation="Vertical" Margin="0,0,35,0">
                             <!-- Canvas 0 -->
+                            <TextBlock Text="{Binding DescriptionCollection[0]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[0]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="0" Background="Transparent">
-                                <StackPanel>
-                                    <ContentControl Content="{Binding CanvasCollection[0]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="0"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[0]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                <Grid Background="Transparent">
+                                    <ContentControl Content="{Binding CanvasCollection[0]}" IsHitTestVisible="False"/>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top"  Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="0"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding StartDragFromCanvas}" 
+                                  CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
+                                    </i:EventTrigger>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="Drop">
                                         <i:InvokeCommandAction Command="{Binding DropValveOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
                                     </i:EventTrigger>
-                                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                                    <i:EventTrigger EventName="LeftMouseButtonDown">
                                         <i:InvokeCommandAction Command="{Binding LeftMouseButtonDownOnCanvas}" CommandParameter="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}"/>
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="MouseLeftButtonUp">
@@ -102,12 +106,12 @@
                             </Border>
 
                             <!-- Canvas 3 -->
+                            <TextBlock Text="{Binding DescriptionCollection[3]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" />
                             <Border BorderBrush="{Binding BorderBrushCollection[3]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="3" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[3]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="3"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[3]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="3"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -128,12 +132,12 @@
                             </Border>
 
                             <!-- Canvas 6 -->
+                            <TextBlock Text="{Binding DescriptionCollection[6]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[6]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="6" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[6]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="6"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[6]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="6"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -154,12 +158,12 @@
                             </Border>
 
                             <!-- Canvas 9 -->
+                            <TextBlock Text="{Binding DescriptionCollection[9]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[9]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="9" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[9]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="9"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[9]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="9"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -183,12 +187,12 @@
                         <!-- KOLONA 2 (Canvas 1,4,7,10) -->
                         <StackPanel Orientation="Vertical" Margin="0,0,35,0">
                             <!-- Canvas 1 -->
+                            <TextBlock Text="{Binding DescriptionCollection[1]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[1]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="1" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[1]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="1"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[1]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="1"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -209,12 +213,12 @@
                             </Border>
 
                             <!-- Canvas 4 -->
+                            <TextBlock Text="{Binding DescriptionCollection[4]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[4]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="4" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[4]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="4"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[4]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="4"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -235,12 +239,12 @@
                             </Border>
 
                             <!-- Canvas 7 -->
+                            <TextBlock Text="{Binding DescriptionCollection[7]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[7]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="7" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[7]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="7"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[7]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="7"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -261,12 +265,12 @@
                             </Border>
 
                             <!-- Canvas 10 -->
+                            <TextBlock Text="{Binding DescriptionCollection[10]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[10]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="10" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[10]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="10"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[10]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="10"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -290,12 +294,12 @@
                         <!-- KOLONA 3 (Canvas 2,5,8,11) -->
                         <StackPanel Orientation="Vertical">
                             <!-- Canvas 2 -->
-                            <Border BorderBrush="{Binding BorderBrushCollection[2]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35"  AllowDrop="True" Tag="2" Background="Transparent">
-                                <StackPanel>
+                            <TextBlock Text="{Binding DescriptionCollection[2]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
+                            <Border BorderBrush="{Binding BorderBrushCollection[2]}" BorderThickness="2" Width="100" Height="100" Margin="0 0 0 35"  AllowDrop="True" Tag="2" Background="Transparent">
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[2]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="2"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[2]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="2"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -316,12 +320,12 @@
                             </Border>
 
                             <!-- Canvas 5 -->
+                            <TextBlock Text="{Binding DescriptionCollection[5]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[5]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="5" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[5]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="5"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[5]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="5"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -342,12 +346,12 @@
                             </Border>
 
                             <!-- Canvas 8 -->
+                            <TextBlock Text="{Binding DescriptionCollection[8]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[8]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,35" AllowDrop="True" Tag="8" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[8]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="8"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[8]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="8"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -368,12 +372,12 @@
                             </Border>
 
                             <!-- Canvas 11 -->
+                            <TextBlock Text="{Binding DescriptionCollection[11]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center"/>
                             <Border BorderBrush="{Binding BorderBrushCollection[11]}" BorderThickness="2" Width="100" Height="100" AllowDrop="True" Tag="11" Background="Transparent">
-                                <StackPanel>
+                                <Grid>
                                     <ContentControl Content="{Binding CanvasCollection[11]}" />
-                                    <Button Content="X" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,78,0,0" Command="{Binding FreeCanvas}" CommandParameter="11"/>
-                                    <TextBlock Text="{Binding DescriptionCollection[11]}" Margin="2,105,0,0"/>
-                                </StackPanel>
+                                    <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding FreeCanvas}" CommandParameter="11"/>
+                                </Grid>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="DragOver">
                                         <i:InvokeCommandAction Command="{Binding DragOverCanvas}" PassEventArgsToCommand="True"/>
@@ -400,7 +404,7 @@
                     <ItemsControl ItemsSource="{Binding LineCollection}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <Canvas Width="390" Height="520"/>
+                                <Canvas Width="390" Height="590"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>

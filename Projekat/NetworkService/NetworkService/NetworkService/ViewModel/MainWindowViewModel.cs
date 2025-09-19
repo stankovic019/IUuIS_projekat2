@@ -41,7 +41,10 @@ namespace NetworkService.ViewModel
         private NetworkEntitiesView networkEntitiesViewInstance;
         public AddEntityViewModel AddEntityVM { get; }
         private AddEntityView addEntityViewInstance;
-        
+
+        public NetworkDisplayViewModel NetworkDisplayVM { get; }
+        private NetworkDisplayView networkDisplayViewInstance;
+
         private string title = "Simulator infrastukturnih sistema";
 
         public string Title
@@ -118,6 +121,7 @@ namespace NetworkService.ViewModel
             CurrentView = new HomePageView();
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
+            NetworkDisplayVM.IsActive = false;
         }
 
         private void OnNetEntitiesCommand()
@@ -128,6 +132,7 @@ namespace NetworkService.ViewModel
             CurrentView = networkEntitiesViewInstance;
             NetworkEntitiesVM.IsActive = true;
             AddEntityVM.IsActive = false;
+            NetworkDisplayVM.IsActive = false;
         }
 
         private void OnNetDisplayCommand()
@@ -135,9 +140,10 @@ namespace NetworkService.ViewModel
             Title = "Network Display";
             HeaderIcon = "/public/icons/network-display-icon.png";
             SetButtons(1, 0, 0, 1, 1, 0, 0, 0, 0);
-            CurrentView = new NetworkDisplayView();
+            CurrentView = networkDisplayViewInstance;
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
+            NetworkDisplayVM.IsActive = true;
         }
 
         private void OnGraphCommand()
@@ -148,6 +154,8 @@ namespace NetworkService.ViewModel
             CurrentView = null;
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
+            NetworkDisplayVM.IsActive = false;
+            
         }
 
         private void OnExitCommand()
@@ -225,6 +233,8 @@ namespace NetworkService.ViewModel
             networkEntitiesViewInstance = new NetworkEntitiesView { DataContext = NetworkEntitiesVM };
             AddEntityVM = new AddEntityViewModel();
             addEntityViewInstance = new AddEntityView{ DataContext =  AddEntityVM};
+            NetworkDisplayVM = new NetworkDisplayViewModel();
+            networkDisplayViewInstance = new NetworkDisplayView{ DataContext = NetworkDisplayVM };
             HomeCommand = new MyICommand(OnHomeCommand);
             NetEntitiesCommand = new MyICommand(OnNetEntitiesCommand);
             NetDisplayCommand = new MyICommand(OnNetDisplayCommand);

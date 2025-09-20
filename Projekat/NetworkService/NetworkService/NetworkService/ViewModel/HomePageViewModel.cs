@@ -26,6 +26,8 @@ namespace NetworkService.ViewModel
         private string[] toolTips;
 
         private DispatcherTimer toolTipTimer;
+        private DispatcherTimer clockTimer;
+
         private HistoryDtoRepository historyDtoRepository;
         private ObservableCollection<HistoryDto> historyDtos;
         public ObservableCollection<HistoryDto> HistoryDtos
@@ -39,12 +41,22 @@ namespace NetworkService.ViewModel
             get { return new ObservableCollection<Valve>(valves.Take(3)); }
         }
 
+        private int cntToolTips = 3;
+
         private string toolTip;
         public string ToolTip
         {
             get => toolTip; 
             set => SetProperty(ref toolTip, value);
         }
+
+        private int toolTipFontSize = 25;
+        public int ToolTipFontSize
+        {
+            get => toolTipFontSize;
+            set => SetProperty(ref toolTipFontSize, value);
+        }
+
 
         private ObservableCollection<Valve> lastThreeValves = new ObservableCollection<Valve>();
         public ObservableCollection<Valve> LastThreeValves
@@ -194,11 +206,50 @@ namespace NetworkService.ViewModel
         {
             toolTipTimer = new DispatcherTimer();
             toolTipTimer.Interval = TimeSpan.FromMilliseconds(6900);
-            toolTipTimer.Tick += (s, e) =>
-            {
-                ToolTip = toolTips[new Random().Next(0, toolTips.Length)];
-            };
+            toolTipTimer.Tick += ToolTipTimer_Tick;
             toolTipTimer.Start();
+        }
+
+        private void ToolTipTimer_Tick(object sender, EventArgs e)
+        {
+
+            Random r = new Random();
+
+            // on every five tooltips it will show a clock
+            bool showClock = cntToolTips == 4;
+
+            if (showClock)
+            {
+                ToolTipFontSize = 80;
+                cntToolTips = 0;
+                StartClockTooltip();
+            }
+            else
+            {
+                ToolTipFontSize = 25;
+                cntToolTips++;
+                if (clockTimer != null)
+                {
+                    clockTimer.Stop();
+                    clockTimer = null;
+                }
+                ToolTip = toolTips[r.Next(toolTips.Length)];
+            }
+        }
+
+        private void StartClockTooltip()
+        {
+            if (clockTimer == null)
+            {
+                clockTimer = new DispatcherTimer();
+                clockTimer.Interval = TimeSpan.FromMilliseconds(1000);
+                clockTimer.Tick += (s, e) =>
+                {
+                    ToolTip = DateTime.Now.ToString("HH:mm:ss");
+                };
+            }
+            clockTimer.Start();
+            ToolTip = DateTime.Now.ToString("HH:mm:ss");
         }
 
     }

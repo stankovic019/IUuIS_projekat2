@@ -126,8 +126,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Tool Tips" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
-                <TextBlock Grid.Row="1" Text="{Binding ToolTip}" FontSize="25" FontFamily="Courier New" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="10 10" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
+                <!--<TextBlock Grid.Row="0" Text="Tool Tips" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>-->
+                <TextBlock Grid.Row="1" Text="{Binding ToolTip}" FontSize="{Binding ToolTipFontSize}" FontFamily="Courier New" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="10 10" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
             </Grid>
 
         </Grid>

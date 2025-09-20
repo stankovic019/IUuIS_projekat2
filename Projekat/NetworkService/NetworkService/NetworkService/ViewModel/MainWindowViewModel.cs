@@ -45,7 +45,7 @@ namespace NetworkService.ViewModel
         public NetworkDisplayViewModel NetworkDisplayVM { get; }
         private NetworkDisplayView networkDisplayViewInstance;
 
-        private string title = "Simulator infrastukturnih sistema";
+        private string title = "Infrastructural systems simulator";
 
         public string Title
         {
@@ -53,7 +53,7 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref title, value);
         }
 
-        private string headerIcon = "/public/icons/home-icon.png";
+        private string headerIcon = "/public/icons/gear-logo-trans.png";
         public string HeaderIcon
         {
             get => headerIcon;
@@ -115,8 +115,8 @@ namespace NetworkService.ViewModel
 
         private void OnHomeCommand()
         {
-            Title = "Simulator infrastukturnih sistema";
-            HeaderIcon = "/public/icons/home-icon.png";
+            Title = "Infrastructural systems simulator";
+            HeaderIcon = "/public/icons/gear-logo-trans.png";
             SetButtons(1, 0, 0, 0, 1, 1, 0, 0, 0);
             CurrentView = new HomePageView();
             NetworkEntitiesVM.IsActive = false;

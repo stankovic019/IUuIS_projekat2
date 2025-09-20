@@ -32,6 +32,14 @@ namespace NetworkService.ViewModel
             set =>  SetProperty(ref isActive, value);
         }
 
+        private string connectingString;
+        public string ConnectingString
+        {
+            get => connectingString;
+            set => SetProperty(ref connectingString, value);
+        }
+
+
         private ValveRepository valveRepository;
         public ObservableCollection<Valve> Valves { get; private set; }
         public ObservableCollection<Valve> ValvesInList { get; set; }
@@ -79,6 +87,7 @@ namespace NetworkService.ViewModel
         public MyICommand<object> SelectionChanged { get; set; }
         public MyICommand<object> FreeCanvas { get; set; }
         public MyICommand<object> RightMouseButtonDownOnCanvas { get; set; }
+        public MyICommand<object> StartDragFromCanvas { get; set; }
         public MyICommand UndoCommand { get; }
         public MyICommand UndoAllCommand { get; }
 
@@ -134,6 +143,7 @@ namespace NetworkService.ViewModel
             SelectionChanged = new MyICommand<object>(OnSelectionChanged);
             FreeCanvas = new MyICommand<object>(OnFreeCanvas);
             RightMouseButtonDownOnCanvas = new MyICommand<object>(OnRightMouseButtonDown);
+            StartDragFromCanvas = new MyICommand<object>(OnStartDragFromCanvas);
             //UndoCommand = new MyICommand(OnUndo);
             //UndoAllCommand = new MyICommand(OnUndoAll);
 
@@ -151,6 +161,29 @@ namespace NetworkService.ViewModel
                     g.OrderBy(v => v.Name).ToList() 
                 ));
             GroupedValves = new ObservableCollection<ValveGroupDto>(groups);
+        }
+
+        private void OnStartDragFromCanvas(object parameter)
+        {
+            // Check if the parameter is a UIElement, specifically a Border
+            if (parameter is Border border)
+            {
+                // Get the index from the Border's Tag
+                if (border.Tag is string tagString && int.TryParse(tagString, out int index))
+                {
+                    // Check if the canvas has a valve to drag
+                    if (CanvasCollection[index].Resources.Contains("taken"))
+                    {
+                        // Set the draggedValve and its source index
+                        draggedValve = (Valve)CanvasCollection[index].Resources["data"];
+                        draggingSourceIndex = index;
+                        dragging = true;
+
+                        // Start the drag-and-drop operation
+                        DragDrop.DoDragDrop(border, draggedValve, DragDropEffects.Move);
+                    }
+                }
+            }
         }
 
         private void OnDragOverCanvas(object parameter)
@@ -183,7 +216,7 @@ namespace NetworkService.ViewModel
             {
                 int index = Convert.ToInt32(parameter);
 
-                string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{draggedValve.Type.ToString().ToLower()}{new Random().Next(1,4)}.jpg";
+                string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{draggedValve.Type.ToString().ToLower()}{draggedValve.Id % 3 + 1 }.jpg";
 
                 if (CanvasCollection[index].Resources["taken"] == null)
                 {
@@ -218,8 +251,8 @@ namespace NetworkService.ViewModel
                     // PREVLACENJE IZ DRUGOG CANVASA
                     if (draggingSourceIndex != -1)
                     {
-                        CanvasCollection[draggingSourceIndex].Background = Brushes.Yellow;
-
+                        CanvasCollection[draggingSourceIndex].Children.Clear();
+                        CanvasCollection[draggingSourceIndex].Background = Brushes.Transparent;
                         CanvasCollection[draggingSourceIndex].Resources.Remove("taken");
                         CanvasCollection[draggingSourceIndex].Resources.Remove("data");
                         BorderBrushCollection[draggingSourceIndex] = Brushes.Black;
@@ -247,6 +280,10 @@ namespace NetworkService.ViewModel
                     {
                         ValvesInList.Remove(draggedValve);
                     }
+
+                    draggedValve = null;
+                    draggingSourceIndex = -1;
+                    dragging = false;
                 }
             }
         }
@@ -298,7 +335,7 @@ namespace NetworkService.ViewModel
 
             if (canvasIndex != -1)
             {
-                CanvasCollection[canvasIndex].Background = Brushes.Yellow;
+                CanvasCollection[canvasIndex].Background = Brushes.Transparent;
                 CanvasCollection[canvasIndex].Resources.Remove("taken");
                 CanvasCollection[canvasIndex].Resources.Remove("data");
                 BorderBrushCollection[canvasIndex] = Brushes.Black;
@@ -402,6 +439,7 @@ namespace NetworkService.ViewModel
             {
                 if (!isLineSourceSelected)
                 {
+                    ConnectingString = $"Connecting {index+1} to ...";
                     sourceCanvasIndex = index;
 
                     linePoint1 = GetPointForCanvasIndex(sourceCanvasIndex);
@@ -415,7 +453,7 @@ namespace NetworkService.ViewModel
                 else
                 {
                     destinationCanvasIndex = index;
-
+                    ConnectingString = string.Empty;
                     if ((sourceCanvasIndex != destinationCanvasIndex) && !DoesLineAlreadyExist(sourceCanvasIndex, destinationCanvasIndex))
                     {
                         linePoint2 = GetPointForCanvasIndex(destinationCanvasIndex);
@@ -445,7 +483,7 @@ namespace NetworkService.ViewModel
                         // Pocetak i kraj linije su u istom canvasu
 
                         isLineSourceSelected = false;
-
+                        ConnectingString = string.Empty;
                         linePoint1 = new Point();
                         linePoint2 = new Point();
                         currentLine = new NewLine();
@@ -457,11 +495,12 @@ namespace NetworkService.ViewModel
                 // Canvas na koji se postavlja tacka nije zauzet
 
                 isLineSourceSelected = false;
-
+                ConnectingString = string.Empty;
                 linePoint1 = new Point();
                 linePoint2 = new Point();
                 currentLine = new NewLine();
             }
+
         }
 
         private void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)

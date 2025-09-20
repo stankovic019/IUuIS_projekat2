@@ -6,3 +6,4 @@ To undo all changes and go back to the beginning or to the selected item in hist
 Press CTRL + E to exit application, and perform all changes to the entities
 To connect items in 'Network Display', right mouse click on first and then right mouse click on second
 To also connect items in 'Network Display', press the corresponding F key for the first one, and then the corresponding F key to the second one
+To remove item from box in 'Network Display' press CTRL + corresponding F key

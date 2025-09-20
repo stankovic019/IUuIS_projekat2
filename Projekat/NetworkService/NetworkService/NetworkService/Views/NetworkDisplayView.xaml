@@ -56,7 +56,6 @@
                 <TextBlock Text="  Valves  " FontSize="40" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold" TextDecorations="Underline"/>
                 <ListView x:Name="listViewEntityList" BorderThickness="3" Margin="0 50 0 0"  SelectedItem="{Binding SelectedValve}" FontFamily="Courier New">
                     <ListView.Resources>
-                        <!-- Define grouping by Type -->
                         <CollectionViewSource x:Key="GroupedValves" Source="{Binding ValvesInList}">
                             <CollectionViewSource.GroupDescriptions>
                                 <PropertyGroupDescription PropertyName="Type"/>
@@ -198,7 +197,6 @@
                             <TextBlock Text="{Binding DescriptionCollection[9]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
                         </StackPanel>
 
-                        <!-- KOLONA 2 (Canvas 1,4,7,10) -->
                         <StackPanel Orientation="Vertical" Margin="0,0,35,0">
                             <!-- Canvas 1 -->
                             <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="1" />
@@ -293,7 +291,6 @@
                             <TextBlock Text="{Binding DescriptionCollection[10]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
                         </StackPanel>
 
-                        <!-- KOLONA 3 (Canvas 2,5,8,11) -->
                         <StackPanel Orientation="Vertical">
                             <!-- Canvas 2 -->
                             <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="2" />

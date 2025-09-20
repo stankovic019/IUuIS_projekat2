@@ -75,7 +75,6 @@
 
                 <TextBlock Grid.Row="0" Text="Recent Changes" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
 
-                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
                 <DataGrid x:Name="recentChangesTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" ItemsSource="{Binding LastThreeValves}" Height="93" VerticalScrollBarVisibility="Disabled">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridRow">
@@ -110,7 +109,6 @@
 
                 <TextBlock Grid.Row="0" Text="Recent History" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>
 
-                <!--u back-u fiksirati da prikazuje samo tri reda (jer je recent history)-->
                 <DataGrid x:Name="recentHistoryTable" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column" Grid.Row="1" FontFamily="Courier New" VerticalContentAlignment="Center" Height="118" ItemsSource="{Binding HistoryDtos}" VerticalScrollBarVisibility="Disabled">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Action" Binding="{Binding ActionName}" Width="*" FontFamily="Courier New" FontSize="25" FontWeight="DemiBold"/>
@@ -126,7 +124,6 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!--<TextBlock Grid.Row="0" Text="Tool Tips" FontSize="36" FontFamily="Courier New" FontWeight="DemiBold"/>-->
                 <TextBlock Grid.Row="1" Text="{Binding ToolTip}" FontSize="{Binding ToolTipFontSize}" FontFamily="Courier New" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="10 10" TextWrapping="WrapWithOverflow" TextAlignment="Center"/>
             </Grid>
 

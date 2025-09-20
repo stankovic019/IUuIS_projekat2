@@ -165,21 +165,16 @@ namespace NetworkService.ViewModel
 
         private void OnStartDragFromCanvas(object parameter)
         {
-            // Check if the parameter is a UIElement, specifically a Border
             if (parameter is Border border)
             {
-                // Get the index from the Border's Tag
                 if (border.Tag is string tagString && int.TryParse(tagString, out int index))
                 {
-                    // Check if the canvas has a valve to drag
                     if (CanvasCollection[index].Resources.Contains("taken"))
                     {
-                        // Set the draggedValve and its source index
                         draggedValve = (Valve)CanvasCollection[index].Resources["data"];
                         draggingSourceIndex = index;
                         dragging = true;
 
-                        // Start the drag-and-drop operation
                         DragDrop.DoDragDrop(border, draggedValve, DragDropEffects.Move);
                     }
                 }
@@ -225,9 +220,8 @@ namespace NetworkService.ViewModel
                     logo.UriSource = new Uri(path, UriKind.Absolute);
                     logo.CacheOption = BitmapCacheOption.OnLoad;
                     logo.EndInit();
-                    logo.Freeze(); // optional
+                    logo.Freeze(); 
 
-                    // Create an Image element instead of setting Background
                     Image img = new Image
                     {
                         Source = logo,
@@ -236,19 +230,16 @@ namespace NetworkService.ViewModel
                         Height = 95
                     };
 
-                    // Clear any old children (if the canvas already had something)
                     CanvasCollection[index].Children.Clear();
                     CanvasCollection[index].Children.Add(img);
 
                     Valve observableValve = Valves.FirstOrDefault(v => v.Id == draggedValve.Id); //getting the real observable object
 
-                    // Mark canvas as taken
                     CanvasCollection[index].Resources["taken"] = true;
                     CanvasCollection[index].Resources["data"] = observableValve;
                     BorderBrushCollection[index] = observableValve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
                     DescriptionCollection[index] = $"ID: {observableValve.Id} Value: {observableValve.MeasuredValue}";
 
-                    // PREVLACENJE IZ DRUGOG CANVASA
                     if (draggingSourceIndex != -1)
                     {
                         CanvasCollection[draggingSourceIndex].Children.Clear();
@@ -261,7 +252,7 @@ namespace NetworkService.ViewModel
 
                         UpdateLinesForCanvas(draggingSourceIndex, index);
 
-                        // Crtanje linije se prekida ako je, izmedju postavljanja tacaka, entitet pomeren na drugo polje
+                        //line drawing is terminated if valve is moved to another canvas
                         if (sourceCanvasIndex != -1)
                         {
                             isLineSourceSelected = false;
@@ -274,7 +265,6 @@ namespace NetworkService.ViewModel
                         draggingSourceIndex = -1;
                     }
 
-                    //PREVLACENJE IZ LISTE
                     //deletin dragged object from list (not the real one)
                     if (ValvesInList.Contains(draggedValve))
                     {
@@ -367,7 +357,7 @@ namespace NetworkService.ViewModel
 
             if (CanvasCollection[index].Resources["taken"] != null)
             {
-                // Crtanje linije se prekida ako je, izmedju postavljanja tacaka, entitet uklonjen sa canvas-a
+                //line drawing is terminated if valve is moved to another canvas
                 if (sourceCanvasIndex != -1)
                 {
                     isLineSourceSelected = false;
@@ -480,8 +470,7 @@ namespace NetworkService.ViewModel
                     }
                     else
                     {
-                        // Pocetak i kraj linije su u istom canvasu
-
+                        //beggining and end of the line is on the same valve
                         isLineSourceSelected = false;
                         ConnectingString = string.Empty;
                         linePoint1 = new Point();
@@ -492,8 +481,7 @@ namespace NetworkService.ViewModel
             }
             else
             {
-                // Canvas na koji se postavlja tacka nije zauzet
-
+                //canvas is not already taken
                 isLineSourceSelected = false;
                 ConnectingString = string.Empty;
                 linePoint1 = new Point();
@@ -539,7 +527,7 @@ namespace NetworkService.ViewModel
             }
             return false;
         }
-        // Centralna tacka na Canvas kontroli
+
         private Point GetPointForCanvasIndex(int canvasIndex)
         {
             double x = 0, y = 0;

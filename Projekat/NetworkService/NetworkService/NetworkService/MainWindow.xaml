@@ -50,9 +50,6 @@
                     <ColumnDefinition Width="0.153*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Ikonica levo -->
-
-                <!-- Naslov -->
                 <TextBlock Text="{Binding Title}"
                            FontSize="36"
                            FontWeight="DemiBold"
@@ -64,7 +61,6 @@
                 <Image Source="{Binding HeaderIcon}" Width="36" Height="36"
                        HorizontalAlignment="Left" Margin="20 0"/>
 
-                <!-- Exit dugme desno -->
                 <Button Command="{Binding ExitCommand}" Padding="0 5" BorderThickness="0" Background="LightGray"
                     x:Name="exitBtn" ToolTip="Exit Application and Save progress (CTRL + E)" Cursor="Hand"
                     Grid.Column="1" VerticalAlignment="Center">
@@ -118,8 +114,6 @@
                 </Grid>
 
                 <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid">
-
-                    <!--ako hocu da mi se mrdaju elementi kad se ne vidi dugme ide visibillity collapsed-->
 
                     <StackPanel Orientation="Vertical">
 

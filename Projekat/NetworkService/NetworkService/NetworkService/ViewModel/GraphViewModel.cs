@@ -68,6 +68,14 @@ namespace NetworkService.ViewModel
                 });
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
+
+            //foreach (Valve v in Valves)
+            //{
+            //    Console.WriteLine(v.Id);
+            //    foreach (PlotValve i in v.LastFiveMeasurements)
+            //        Console.WriteLine(i);
+            //    Console.WriteLine("---------------------------------------------");
+            //}
             this.Observer();
         }
 

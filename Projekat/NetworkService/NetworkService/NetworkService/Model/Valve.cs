@@ -1,6 +1,7 @@
 ﻿using NetworkService.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
@@ -20,6 +21,7 @@ namespace NetworkService.Model
         private int lastValue;
         private ValueValidation validation;
         private string dateTime;
+        private ObservableCollection<PlotValve> lastFiveMeasurements;
 
 
         public Valve(int id, string name, ValveType type, int measuredValue, string dateTime)
@@ -29,6 +31,7 @@ namespace NetworkService.Model
             this.Type = type;
             this.MeasuredValue = measuredValue;
             this.DateTime = dateTime;
+            this.lastFiveMeasurements = new ObservableCollection<PlotValve>();
 
         }
         
@@ -40,6 +43,7 @@ namespace NetworkService.Model
             this.MeasuredValue = v.MeasuredValue;
             this.DateTime = v.DateTime;
             this.LastValue = v.LastValue;
+            this.lastFiveMeasurements = new ObservableCollection<PlotValve>();
         }
 
 
@@ -49,6 +53,20 @@ namespace NetworkService.Model
             this.MeasuredValue = measuredValue;
             this.DateTime = dateTime;
         }
+
+        public void insertLatestValue(int latestValue, string timestamp)
+        {
+            PlotValve pv = new PlotValve(latestValue, timestamp);
+
+            if(LastFiveMeasurements.Count < 5)
+                LastFiveMeasurements.Add(pv);
+            else
+            {
+                LastFiveMeasurements.RemoveAt(0); //removing fifth latest measure
+                LastFiveMeasurements.Add(pv); //and puting the latest measure
+            }
+        }
+
 
         public int Id
         {
@@ -144,6 +162,19 @@ namespace NetworkService.Model
                 {
                     dateTime = value;
                     OnPropertyChanged("DateTime");
+                }
+            }
+        }
+
+        public ObservableCollection<PlotValve> LastFiveMeasurements
+        {
+            get { return lastFiveMeasurements; }
+            set
+            {
+                if (lastFiveMeasurements != value)
+                {
+                    lastFiveMeasurements = value;
+                    OnPropertyChanged("LastFiveMeasurements");
                 }
             }
         }

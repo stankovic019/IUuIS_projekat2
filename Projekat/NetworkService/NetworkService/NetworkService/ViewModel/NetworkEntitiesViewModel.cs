@@ -72,7 +72,10 @@ namespace NetworkService.ViewModel
 
                                 Valve existing = Valves.FirstOrDefault(v => v.Id == id);
                                 if (existing != null)
+                                {
                                     existing.updateValues(measuredValue, dateTime);
+                                    existing.insertLatestValue(measuredValue, dateTime);
+                                }
                             }
 
                             var previouslySelected = SelectedValve;

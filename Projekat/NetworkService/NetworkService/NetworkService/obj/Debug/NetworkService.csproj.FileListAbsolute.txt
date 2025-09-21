@@ -51,3 +51,5 @@ C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\Netw
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\AddEntityView.baml
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayView.g.cs
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\NetworkDisplayView.baml
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\GraphView.g.cs
+C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\obj\Debug\Views\GraphView.baml

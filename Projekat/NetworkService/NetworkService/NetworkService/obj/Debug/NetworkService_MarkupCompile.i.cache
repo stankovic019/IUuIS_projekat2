@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\App.xaml
-5-1927123622
+6259526691
 
-37-1729795206
+401104527893
 181849305000
-MainWindow.xaml;Views\AddEntityView.xaml;Views\HomePageView.xaml;Views\NetworkDisplayView.xaml;Views\NetworkEntitiesView.xaml;
+MainWindow.xaml;Views\AddEntityView.xaml;Views\GraphView.xaml;Views\HomePageView.xaml;Views\NetworkDisplayView.xaml;Views\NetworkEntitiesView.xaml;
 
-False
+True
 

@@ -178,7 +178,7 @@ namespace NetworkService.ViewModel
             Title = "Graph";
             HeaderIcon = "/public/icons/graph-icon.png";
             SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
-            CurrentView = null;
+            CurrentView = new GraphView();
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
             NetworkDisplayVM.IsActive = false;
@@ -192,7 +192,7 @@ namespace NetworkService.ViewModel
             {
                 //ValveRepository.Instance.StoreValves();
                 NotificationService.Instance.ShowSuccess("", "Data saved successfully");
-                await Task.Delay(1500);
+                //await Task.Delay(1500);
                 Application.Current.Shutdown();
             }
         }

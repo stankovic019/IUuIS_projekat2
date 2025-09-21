@@ -76,6 +76,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Model\NewLine.cs" />
+    <Compile Include="Model\NewRectangle.cs" />
     <Compile Include="Repositories\HistoryDtoRepository.cs" />
     <Compile Include="Repositories\HistoryRepository.cs" />
     <Compile Include="Services\NotificationService\NotificationService.cs" />
@@ -96,12 +97,16 @@
     <Compile Include="Services\UndoServices\FreeCanvas.cs" />
     <Compile Include="Services\UndoServices\IUndoService.cs" />
     <Compile Include="ViewModel\AddEntityViewModel.cs" />
+    <Compile Include="ViewModel\GraphViewModel.cs" />
     <Compile Include="ViewModel\HomePageViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\NetworkDisplayViewModel.cs" />
     <Compile Include="ViewModel\NetworkEntitiesViewModel.cs" />
     <Compile Include="Views\AddEntityView.xaml.cs">
       <DependentUpon>AddEntityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GraphView.xaml.cs">
+      <DependentUpon>GraphView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
@@ -128,6 +133,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AddEntityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GraphView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

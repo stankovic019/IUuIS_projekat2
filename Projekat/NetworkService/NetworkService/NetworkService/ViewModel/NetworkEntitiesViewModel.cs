@@ -297,15 +297,11 @@ namespace NetworkService.ViewModel
 
         public MyICommand ResetCommand { get; }
         public MyICommand DeleteCommand { get; }
-        public MyICommand UndoCommand { get; }
-        public MyICommand UndoAllCommand { get; }
 
         public NetworkEntitiesViewModel()
         {
             ResetCommand = new MyICommand(OnReset);
             DeleteCommand = new MyICommand(OnDelete);
-            UndoCommand = new MyICommand(OnUndo);
-            UndoAllCommand = new MyICommand(OnUndoAll);
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
             ValvesView = CollectionViewSource.GetDefaultView(Valves);
@@ -341,7 +337,12 @@ namespace NetworkService.ViewModel
             }
         }
 
-        private void OnDelete()
+        private async Task deleteTime()
+        {
+            await Task.Delay(1000);
+        }
+
+        private async void OnDelete()
         {
             if (!IsActive) return;
             if (SelectedValve == null) return;
@@ -350,110 +351,22 @@ namespace NetworkService.ViewModel
                 if (MessageBox.Show($"Do you really wanna delete Valve: {SelectedValve.Id} : {SelectedValve.Name} ?", $"Delete Valve {SelectedValve.Id}", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     int id = SelectedValve.Id;
-                    IUndoService deleteValve = new DeleteValve(this.Valves, SelectedValve);
-                    if (deleteValve.Action())
-                    {
-                        undoStack.Push(deleteValve);
-                        HistoryDtos.Insert(0, new HistoryDto(deleteValve.getTitle(), deleteValve.getDateTime()));
-                        if (ValvesView != null)
-                            ValvesView.Refresh();
-                    }
+                    IUndoService deleteValve = new DeleteValve(this, SelectedValve);
+
+                    Valves.Remove(SelectedValve);
+                    NotificationService.Instance.ShowInfo("Deleting...");
+                    await Task.Delay(2000);
+                    undoStack.Push(deleteValve);
+                    HistoryDtos.Insert(0, new HistoryDto(deleteValve.getTitle(), deleteValve.getDateTime()));
+                    if (ValvesView != null)
+                        ValvesView.Refresh();
+                    
                 }
             }
             catch (Exception ex) {
                 NotificationService.Instance.ShowError($"Error while Deleting {SelectedValve}, try again later", "ERROR Delete");
             }
         }
-
-        private void OnUndo()
-        {   
-            if(!IsActive) return;
-            try
-            {
-                if (undoStack.Any())
-                {
-                    IUndoService action = undoStack.Pop();
-                    if (action.Undo())
-                    {   
-                        HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                        HistoryDtos.Remove(forRemoveFromHistory);
-                        if (ValvesView != null)
-                            ValvesView.Refresh();
-                    }
-                    else
-                    {
-                        undoStack.Push(action);
-                    }
-                }
-            }
-            catch (Exception ex) {
-                NotificationService.Instance.ShowError("Error in Undo, try again later", "ERROR Undo");
-            }
-        }
-
-        private void OnUndoAll()
-        {
-            if (!IsActive) return;
-            try
-            {
-                if (SelectedHistoryItem.ActionName == string.Empty)
-                {
-                    if (MessageBox.Show("Do you want to Undo All changes and go back to the beginning?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
-                        while (undoStack.Any())
-                        {
-                            IUndoService action = undoStack.Pop();
-                            if (action.Undo())
-                            {
-                                HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                                HistoryDtos.Remove(forRemoveFromHistory);
-                                if (ValvesView != null)
-                                    ValvesView.Refresh();
-                            }
-                            else
-                            {
-                                undoStack.Push(action);
-                            }
-                        }
-                    }
-                }
-                else if (SelectedHistoryItem.ActionName != string.Empty)
-                {
-                    if (MessageBox.Show($"Do you want to Undo All changes and go back to {SelectedHistoryItem.ActionName}?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
-                        HistoryDto item;
-                        do
-                        {
-                            item = HistoryDtos.ElementAt(0);
-                            if (item.ActionName != SelectedHistoryItem.ActionName)
-                            {
-                                IUndoService action = undoStack.Pop();
-                                if (action.Undo())
-                                {
-                                    HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                                    HistoryDtos.Remove(forRemoveFromHistory);
-                                    if (ValvesView != null)
-                                        ValvesView.Refresh();
-                                }
-                                else
-                                {
-                                    undoStack.Push(action);
-                                }
-                            }
-                        } while (item.ActionName != SelectedHistoryItem.ActionName);
-                    }
-                }
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.ToString());
-                NotificationService.Instance.ShowError("Error in Undo All, try again later.", "ERROR Undo all");
-            }
-            finally
-            {
-                selectedHistoryItem = new HistoryDto(string.Empty, "");
-            }
-        }
-
     }
 }
 

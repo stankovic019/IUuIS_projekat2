@@ -2,32 +2,30 @@
 using NetworkService.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NetworkService.Services.UndoServices
 {
-    public class AddValve : IUndoService
+    public class ConnectValves : IUndoService
     {
-
-        private readonly AddEntityViewModel viewModel;
-        private readonly Valve valve;
+        private readonly NetworkDisplayViewModel viewModel;
+        private readonly NewLine line;
         private readonly string actionTitle;
         private readonly string dateTime;
 
-        public AddValve(AddEntityViewModel viewModel, Valve valve)
+
+        public ConnectValves(NetworkDisplayViewModel viewModel, NewLine line, int cIdx1, int cIdx2)
         {
             this.viewModel = viewModel;
-            this.valve = valve;
-            actionTitle = $"Add Valve {valve.Id}";
-            dateTime = DateTime.Now.ToString();
+            this.line = line;
+            this.actionTitle = $"Fields {cIdx1+1} and {cIdx2+1} connected";
+            this.dateTime = DateTime.Now.ToString();
         }
-
         public void Undo()
         {
-            viewModel.Valves.Remove(valve);
+            viewModel.LineCollection.Remove(line);
         }
 
         public string getDateTime()

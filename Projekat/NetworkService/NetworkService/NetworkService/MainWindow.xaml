@@ -21,9 +21,9 @@
         <KeyBinding Key="G" Modifiers="Control" Command="{Binding GraphCommand}" />
         <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}" />
         <KeyBinding Key="N" Modifiers="Control" Command="{Binding AddCommand}" />
-        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding NetworkEntitiesVM.UndoCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}" />
         <KeyBinding Key="S" Modifiers="Control" Command="{Binding AddEntityVM.SaveCommand}" />
-        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding NetworkEntitiesVM.UndoAllCommand}" />
+        <KeyBinding Key="Z" Modifiers="Control+Shift" Command="{Binding UndoAllCommand}" />
         <KeyBinding Key="Delete" Modifiers="Shift" Command="{Binding NetworkEntitiesVM.DeleteCommand}" />
         <KeyBinding Key="C" Modifiers="Shift" Command="{Binding AddEntityVM.ClearCommand}" />
         <KeyBinding Key="X" Modifiers="Shift" Command="{Binding AddEntityVM.DiscardCommand}" />
@@ -77,7 +77,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="5.5*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.7*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" Background="LightGray">
@@ -113,7 +113,7 @@
 
                 </Grid>
 
-                <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid">
+                <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid" Visibility="{Binding ToolGridVisible, Converter={StaticResource BoolToVisibilityConverter}}">
 
                     <StackPanel Orientation="Vertical">
 
@@ -137,7 +137,7 @@
 
                         <Button Visibility="{Binding UndoBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Undo last action (CTRL + Z)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.UndoCommand}">
+            ToolTip="Undo last action (CTRL + Z)" Cursor="Hand" Command="{Binding UndoCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/undo-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Undo" VerticalAlignment="Center" FontFamily="Courier New"/>
@@ -146,19 +146,10 @@
 
                         <Button Visibility="{Binding UndoAllBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
             BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="Undo all actions and go back to the beginning or to the selected history item (CTRL + SHIFT + Z)" Cursor="Hand" Command="{Binding NetworkEntitiesVM.UndoAllCommand}">
+            ToolTip="Undo all actions and go back to the beginning or to the selected history item (CTRL + SHIFT + Z)" Cursor="Hand" Command="{Binding UndoAllCommand}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/public/icons/undo-all-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
                                 <TextBlock Text="Undo All" VerticalAlignment="Center" FontFamily="Courier New"/>
-                            </StackPanel>
-                        </Button>
-
-                        <Button Visibility="{Binding NotificationBtnVisible, Converter={StaticResource BoolToVisibilityConverter}}" 
-            BorderThickness="0" Background="LightGray" Margin="0 10 0 0" Padding="0 5" 
-            ToolTip="View Notifications (CTRL + W)" Cursor="Hand">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/public/icons/notification-icon.png" Width="25" Height="25" Margin="0,0,5,0"/>
-                                <TextBlock Text="Notification" VerticalAlignment="Center" FontFamily="Courier New"/>
                             </StackPanel>
                         </Button>
 
@@ -189,7 +180,8 @@
 
                 </Grid>
 
-                <ContentControl Grid.Column="1" Content="{Binding CurrentView}" Background="White"/>
+                <ContentControl Grid.Column="1" Content="{Binding CurrentView}" Background="White"
+                                Grid.ColumnSpan="{Binding Span}"/>
 
 
             </Grid>

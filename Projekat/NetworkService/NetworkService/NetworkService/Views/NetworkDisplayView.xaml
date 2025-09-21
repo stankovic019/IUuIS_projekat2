@@ -406,10 +406,18 @@
 
             <Grid Grid.Column="2">
                 <TextBlock Text=" History " FontSize="40" HorizontalAlignment="Center" FontFamily="Courier New" FontWeight="DemiBold" TextDecorations="Underline"/>
-                <ListBox ScrollViewer.CanContentScroll="True" Margin="0 50 0 0" FontFamily="Courier New" FontWeight="DemiBold" ItemsSource="{Binding HistoryDtos}" SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}" BorderThickness="3">
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0 50 0 0" FontFamily="Courier New" FontWeight="DemiBold" ItemsSource="{Binding HistoryDtos}" SelectedItem="{Binding SelectedHistoryItem, Mode=TwoWay}" BorderThickness="3">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ActionName}" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{Binding ActionName}" TextWrapping="Wrap" Grid.Row="0" Margin="5"/>
+                                
+                                <Border Grid.Row="1" Height="1" Background="Gray" HorizontalAlignment="Stretch" Margin="0,5,0,5"/>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

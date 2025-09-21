@@ -32,6 +32,13 @@ namespace NetworkService.ViewModel
             set =>  SetProperty(ref isActive, value);
         }
 
+        private bool isMoving = false;
+        public bool IsMoving
+        {
+            get => isMoving;
+            set => SetProperty(ref isMoving, value); 
+        }
+
         private string connectingString;
         public string ConnectingString
         {
@@ -104,11 +111,6 @@ namespace NetworkService.ViewModel
             Valves = valveRepository.Valves;
             ValvesInList = new ObservableCollection<Valve>();
 
-            foreach(Valve v in Valves)
-            {
-                ValvesInList.Add(new Valve(v)); //making copy of an object for his manipulation
-            }
-
 
             historyRepository = HistoryRepository.Instance;
             undoStack = historyRepository.UndoStack;
@@ -170,7 +172,8 @@ namespace NetworkService.ViewModel
                 if (border.Tag is string tagString && int.TryParse(tagString, out int index))
                 {
                     if (CanvasCollection[index].Resources.Contains("taken"))
-                    {
+                    {   
+                        IsMoving = true;
                         draggedValve = (Valve)CanvasCollection[index].Resources["data"];
                         draggingSourceIndex = index;
                         dragging = true;
@@ -204,84 +207,48 @@ namespace NetworkService.ViewModel
             return -1;
         }
 
-
         private void OnDrop(object parameter)
         {
             if (draggedValve != null)
             {
-                int index = Convert.ToInt32(parameter);
+                int destinationIndex = Convert.ToInt32(parameter);
 
-                string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{draggedValve.Type.ToString().ToLower()}{draggedValve.Id % 3 + 1 }.jpg";
-
-                if (CanvasCollection[index].Resources["taken"] == null)
+                if (CanvasCollection[destinationIndex].Resources["taken"] == null)
                 {
-                    BitmapImage logo = new BitmapImage();
-                    logo.BeginInit();
-                    logo.UriSource = new Uri(path, UriKind.Absolute);
-                    logo.CacheOption = BitmapCacheOption.OnLoad;
-                    logo.EndInit();
-                    logo.Freeze(); 
-
-                    Image img = new Image
-                    {
-                        Source = logo,
-                        Stretch = Stretch.UniformToFill,
-                        Width = 95,
-                        Height = 95
-                    };
-
-                    CanvasCollection[index].Children.Clear();
-                    CanvasCollection[index].Children.Add(img);
-
-                    Valve observableValve = Valves.FirstOrDefault(v => v.Id == draggedValve.Id); //getting the real observable object
-
-                    CanvasCollection[index].Resources["taken"] = true;
-                    CanvasCollection[index].Resources["data"] = observableValve;
-                    BorderBrushCollection[index] = observableValve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
-                    DescriptionCollection[index] = $"ID: {observableValve.Id} Value: {observableValve.MeasuredValue}";
-
+                    // Perform the drop action
                     if (draggingSourceIndex != -1)
                     {
-                        CanvasCollection[draggingSourceIndex].Children.Clear();
-                        CanvasCollection[draggingSourceIndex].Background = Brushes.Transparent;
-                        CanvasCollection[draggingSourceIndex].Resources.Remove("taken");
-                        CanvasCollection[draggingSourceIndex].Resources.Remove("data");
-                        BorderBrushCollection[draggingSourceIndex] = Brushes.Black;
-                        DescriptionCollection[draggingSourceIndex] = (" ");
-
-
-                        UpdateLinesForCanvas(draggingSourceIndex, index);
-
-                        //line drawing is terminated if valve is moved to another canvas
-                        if (sourceCanvasIndex != -1)
-                        {
-                            isLineSourceSelected = false;
-                            sourceCanvasIndex = -1;
-                            linePoint1 = new Point();
-                            linePoint2 = new Point();
-                            currentLine = new NewLine();
-                        }
-
-                        draggingSourceIndex = -1;
+                        // This is a move from one canvas to another
+                        IsMoving = true;
+                        this.OnFreeCanvas(draggingSourceIndex);
                     }
-
-                    //deletin dragged object from list (not the real one)
-                    if (ValvesInList.Contains(draggedValve))
+                    else
                     {
+                        // This is a drop from the list, so remove it from the list
                         ValvesInList.Remove(draggedValve);
                     }
 
+                    // Place the valve on the new canvas. This is a crucial step that changes the state.
+                    // You can use the RedoDropOnCanvas helper method here as well, since it's cleaner.
+                    RedoDropOnCanvas(draggedValve, destinationIndex, draggingSourceIndex);
+                    // Create and push the undo action
+                    IUndoService undoAction = new DropOnCanvas(this, draggedValve, destinationIndex, draggingSourceIndex);
+                    undoStack.Push(undoAction);
+                    HistoryDtos.Insert(0, new HistoryDto(undoAction.getTitle(), undoAction.getDateTime()));
+
+
+
+                    // Reset drag state
                     draggedValve = null;
                     draggingSourceIndex = -1;
                     dragging = false;
+                    IsMoving = false;
                 }
             }
         }
-
         private void Observer()
         {
             var observeThread = new Thread(
-
                 () =>
                 {
                     while (true)
@@ -290,27 +257,55 @@ namespace NetworkService.ViewModel
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-
-                                foreach (Valve v in Valves)
+                                //if the main valves are updated (added new or deleted)
+                                List<Valve> valvesToAdd = Valves.Where(v =>
                                 {
-                                    int idx = GetCanvasIndexForValveId(v.Id);
-
-                                    if (idx != -1)
+                                    // Check if the valve exists in ValvesInList based on its unique ID
+                                    bool inList = ValvesInList.Any(vList => vList.Id == v.Id);
+                                    // Check if the valve exists on any canvas
+                                    bool onCanvas = CanvasCollection.Any(canvas =>
                                     {
-                                        DescriptionCollection[idx] = $"ID: {v.Id} Value: {v.MeasuredValue}";
-                                        BorderBrushCollection[idx] = v.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
+                                        var valveOnCanvas = canvas.Resources["data"] as Valve;
+                                        return valveOnCanvas != null && valveOnCanvas.Id == v.Id;
+                                    });
+
+                                    return !inList && !onCanvas;
+                                }).ToList();
+
+                                foreach (Valve valve in valvesToAdd)
+                                {
+                                    // Add a new, but unique, instance to your display list
+                                    ValvesInList.Add(new Valve(valve));
+                                }
+
+                                //which valve needs to be removed from canvas (its deleted)
+                                List<Valve> valvesToRemoveFromCanvas = new List<Valve>();
+                                for (int i = 0; i < 12; ++i)
+                                {
+                                    Valve canvasValve = CanvasCollection[i].Resources["data"] as Valve;
+                                    if (canvasValve != null && !Valves.Any(v => v.Id == canvasValve.Id))
+                                    {
+                                        valvesToRemoveFromCanvas.Add(canvasValve);
+                                        this.OnFreeCanvas(i);
                                     }
                                 }
 
-                                for(int i = 0; i < 12; ++i)
+                                //which valve needs to be removed from the list (its deleted)
+                                List<Valve> valvesToRemoveFromList = ValvesInList.Where(vList =>
                                 {
-                                    if (!Valves.Contains(CanvasCollection[i].Resources["data"] as Valve))
-                                        this.OnFreeCanvas(i);
+                                    Valve valveInMainList = Valves.FirstOrDefault(v => v.Id == vList.Id);
+                                    return valveInMainList == null;
+                                }).ToList();
+
+                                foreach (Valve valve in valvesToRemoveFromList)
+                                {
+                                    this.DeleteValveFromList(valve);
                                 }
-
-
                             });
-                        }catch(Exception ex) { }
+                        }
+                        catch (Exception ex)
+                        {
+                        }
 
                         Thread.Sleep(100);
                     }
@@ -319,21 +314,19 @@ namespace NetworkService.ViewModel
             observeThread.Start();
         }
 
-        public void DeleteValveFromCanvas(Valve valve)
+        public void DeleteValveFromList(Valve valve)
         {
-            int canvasIndex = GetCanvasIndexForValveId(valve.Id);
-
-            if (canvasIndex != -1)
+            try
             {
-                CanvasCollection[canvasIndex].Background = Brushes.Transparent;
-                CanvasCollection[canvasIndex].Resources.Remove("taken");
-                CanvasCollection[canvasIndex].Resources.Remove("data");
-                BorderBrushCollection[canvasIndex] = Brushes.Black;
-                DescriptionCollection[canvasIndex] = ($" ");
-
-                DeleteLinesForCanvas(canvasIndex);
-            }
+                var valveToRemove = ValvesInList.FirstOrDefault(v => v.Id == valve.Id);
+                if (valveToRemove != null)
+                {
+                    ValvesInList.Remove(valveToRemove);
+                }
+                BuildGroupedValves();
+            }catch(Exception ex) { }
         }
+
         private void DeleteLinesForCanvas(int canvasIndex)
         {
             List<NewLine> linesToDelete = new List<NewLine>();
@@ -351,33 +344,101 @@ namespace NetworkService.ViewModel
                 LineCollection.Remove(line);
             }
         }
-        private void OnFreeCanvas(object parameter)
+
+        public void OnFreeCanvas(object parameter)
         {
             int index = Convert.ToInt32(parameter);
 
-            if (CanvasCollection[index].Resources["taken"] != null)
+            if (CanvasCollection[index].Resources["taken"] == null)
             {
-                //line drawing is terminated if valve is moved to another canvas
-                if (sourceCanvasIndex != -1)
-                {
-                    isLineSourceSelected = false;
-                    sourceCanvasIndex = -1;
-                    linePoint1 = new Point();
-                    linePoint2 = new Point();
-                    currentLine = new NewLine();
-                }
+                return;
+            }
 
-                DeleteLinesForCanvas(index);
+            Valve valveToDelete = CanvasCollection[index].Resources["data"] as Valve;
 
-                ValvesInList.Add((Valve)CanvasCollection[index].Resources["data"]);
-                CanvasCollection[index].Children.Clear();
-                CanvasCollection[index].Background = Brushes.Transparent;
-                CanvasCollection[index].Resources.Remove("taken");
-                CanvasCollection[index].Resources.Remove("data");
-                BorderBrushCollection[index] = Brushes.Black;
-                DescriptionCollection[index] = ($" ");
+            // Find all lines connected to this canvas
+            List<NewLine> linesToDelete = LineCollection.Where(line =>
+                line.Source == index || line.Destination == index).ToList();
+
+            if (!IsMoving)
+            {
+                // This is the user's action, so we create an undo object.
+                IUndoService undoAction = new FreeCanvas(this, valveToDelete, index, linesToDelete);
+                undoStack.Push(undoAction);
+                HistoryDtos.Insert(0, new HistoryDto(undoAction.getTitle(), undoAction.getDateTime()));
+            }
+
+            // Now, call the private method to perform the actual state changes.
+            // This is the key separation to prevent recursion.
+            PerformFreeCanvas(index, valveToDelete);
+
+            // Reset line drawing state if necessary
+            if (sourceCanvasIndex != -1)
+            {
+                isLineSourceSelected = false;
+                sourceCanvasIndex = -1;
+                linePoint1 = new Point();
+                linePoint2 = new Point();
+                currentLine = new NewLine();
             }
         }
+
+
+
+        public void PerformFreeCanvas(int index, Valve valve)
+        {
+            // The view model is handling the IsMoving logic
+            // Add the valve back to the list of available valves
+            if (!IsMoving)
+            {
+                ValvesInList.Add(valve);
+                DeleteLinesForCanvas(index);
+            }
+
+            // Clear the canvas's visual properties
+            CanvasCollection[index].Children.Clear();
+            CanvasCollection[index].Background = Brushes.Transparent;
+            CanvasCollection[index].Resources.Remove("taken");
+            CanvasCollection[index].Resources.Remove("data");
+            BorderBrushCollection[index] = Brushes.Black;
+            DescriptionCollection[index] = ($" ");
+        }
+
+
+        public void RedoDropOnCanvas(Valve valve, int index, int srcIdx)
+        {
+            string path = $@"C:\Users\Dimitrije\Documents\GitHub\IUuIS_projekat2\Projekat\NetworkService\NetworkService\NetworkService\public\pics\{valve.Type.ToString().ToLower()}{valve.Id % 3 + 1}.jpg";
+
+            BitmapImage logo = new BitmapImage();
+            logo.BeginInit();
+            logo.UriSource = new Uri(path, UriKind.Absolute);
+            logo.CacheOption = BitmapCacheOption.OnLoad;
+            logo.EndInit();
+            logo.Freeze();
+
+            Image img = new Image
+            {
+                Source = logo,
+                Stretch = Stretch.UniformToFill,
+                Width = 95,
+                Height = 95
+            };
+
+            CanvasCollection[index].Children.Clear();
+            CanvasCollection[index].Children.Add(img);
+
+            CanvasCollection[index].Resources["taken"] = true;
+            CanvasCollection[index].Resources["data"] = valve;
+            BorderBrushCollection[index] = valve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
+            DescriptionCollection[index] = $"ID: {valve.Id} Value: {valve.MeasuredValue}";
+
+            // Handle line updates if the valve was moved from another canvas
+            if (srcIdx != -1)
+            {
+                UpdateLinesForCanvas(srcIdx, index);
+            }
+        }
+
         public Valve SelectedValve
         {
             get => selectedValve;
@@ -452,7 +513,7 @@ namespace NetworkService.ViewModel
                         currentLine.Y2 = linePoint2.Y;
                         currentLine.Destination = destinationCanvasIndex;
 
-                        LineCollection.Add(new NewLine
+                        NewLine line = new NewLine
                         {
                             X1 = currentLine.X1,
                             Y1 = currentLine.Y1,
@@ -460,10 +521,14 @@ namespace NetworkService.ViewModel
                             Y2 = currentLine.Y2,
                             Source = currentLine.Source,
                             Destination = currentLine.Destination
-                        });
+                        };
+
+                        LineCollection.Add(line);
+                        IUndoService connect = new ConnectValves(this, line, sourceCanvasIndex, destinationCanvasIndex);
+                        undoStack.Push(connect);
+                        HistoryDtos.Insert(0, new HistoryDto(connect.getTitle(), connect.getDateTime()));
 
                         isLineSourceSelected = false;
-
                         linePoint1 = new Point();
                         linePoint2 = new Point();
                         currentLine = new NewLine();
@@ -491,7 +556,7 @@ namespace NetworkService.ViewModel
 
         }
 
-        private void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)
+        public void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)
         {
             for (int i = 0; i < LineCollection.Count; i++)
             {

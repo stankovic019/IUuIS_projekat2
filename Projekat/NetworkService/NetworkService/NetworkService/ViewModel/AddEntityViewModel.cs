@@ -143,17 +143,14 @@ namespace NetworkService.ViewModel
                     ValveType type = SelectedTypeIndex == 1 ? ValveType.CableSensor : ValveType.DigitalManometer;
 
                     Valve newValve = new Valve(EntityId, Name, type, LastValue, CreatedAt);
-                    IUndoService addValve = new AddValve(this.Valves, newValve);
-
-                    if (addValve.Action())
-                    {   
-                        undoStack.Push(addValve);
-                        HistoryDtos.Insert(0, new HistoryDto(addValve.getTitle(), addValve.getDateTime()));
-                        this.Name = string.Empty;
-                        this.SelectedTypeIndex = 0;
-                        this.LastValue = -1;
-                        this.OnClose = true;
-                    }
+                    Valves.Add(newValve);
+                    IUndoService addValve = new AddValve(this, newValve);
+                    undoStack.Push(addValve);
+                    HistoryDtos.Insert(0, new HistoryDto(addValve.getTitle(), addValve.getDateTime()));
+                    this.Name = string.Empty;
+                    this.SelectedTypeIndex = 0;
+                    this.LastValue = -1;
+                    this.OnClose = true;    
                 }
             }
             catch (Exception ex) { 

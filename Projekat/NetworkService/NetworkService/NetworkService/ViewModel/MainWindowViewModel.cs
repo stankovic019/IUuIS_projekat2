@@ -1,7 +1,9 @@
-﻿using NetworkService.Helpers;
+﻿using NetworkService.DTOs;
+using NetworkService.Helpers;
 using NetworkService.Model;
 using NetworkService.Repositories;
 using NetworkService.Services;
+using NetworkService.Services.UndoServices;
 using NetworkService.Views;
 using Notification.Wpf;
 using System;
@@ -24,6 +26,29 @@ namespace NetworkService.ViewModel
     {
 
         NotificationManager notificationManager;
+
+        private HistoryRepository historyRepository;
+        private Stack<IUndoService> undoStack;
+        private HistoryDtoRepository historyDtoRepository;
+        private ObservableCollection<HistoryDto> historyDtos;
+        public ObservableCollection<HistoryDto> HistoryDtos
+        {
+            get => historyDtos;
+        }
+
+        private HistoryDto selectedHistoryItem = new HistoryDto(string.Empty, "");
+        public HistoryDto SelectedHistoryItem
+        {
+            get => selectedHistoryItem;
+            set
+            {
+                if (selectedHistoryItem != value)
+                {
+                    selectedHistoryItem = value;
+                    OnPropertyChanged(nameof(SelectedHistoryItem));
+                }
+            }
+        }
 
         ValveRepository valveRepository;
 
@@ -78,10 +103,10 @@ namespace NetworkService.ViewModel
         public bool DeleteBtnVisible { get; set; }
         public bool UndoBtnVisible { get; set; }
         public bool UndoAllBtnVisible { get; set; }
-        public bool NotificationBtnVisible { get; set; }
         public bool SaveBtnVisible { get; set; }
         public bool ClearBtnVisible { get; set; }
         public bool DiscardBtnVisible { get; set; }
+        public int Span { get; set; }
 
         public MyICommand ShowNotificationCommand { get; }
         public MyICommand HomeCommand { get; }
@@ -90,34 +115,36 @@ namespace NetworkService.ViewModel
         public MyICommand GraphCommand { get; }
         public MyICommand ExitCommand { get; }
         public MyICommand AddCommand { get; }
-
-        private void SetButtons(int g, int b1, int b2, int b3, int b4, int b5, int b6, int b7, int b8)
+        public MyICommand UndoCommand { get; }
+        public MyICommand UndoAllCommand { get; }
+        private void SetButtons(int g, int b1, int b2, int b3, int b4, int b5, int b6, int b7)
         {
             ToolGridVisible = g == 1;
+            Span = ToolGridVisible ? 0 : 2;
             AddBtnVisible = b1 == 1;
             DeleteBtnVisible = b2 == 1;
             UndoBtnVisible = b3 == 1;
             UndoAllBtnVisible = b4 == 1;
-            NotificationBtnVisible = b5 == 1;
-            SaveBtnVisible = b6 == 1;
-            ClearBtnVisible = b7 == 1;
-            DiscardBtnVisible = b8 == 1;
+            SaveBtnVisible = b5 == 1;
+            ClearBtnVisible = b6 == 1;
+            DiscardBtnVisible = b7 == 1;
 
             OnPropertyChanged(nameof(AddBtnVisible));
             OnPropertyChanged(nameof(DeleteBtnVisible));
             OnPropertyChanged(nameof(UndoBtnVisible));
             OnPropertyChanged(nameof(UndoAllBtnVisible));
-            OnPropertyChanged(nameof(NotificationBtnVisible));
             OnPropertyChanged(nameof(SaveBtnVisible));
             OnPropertyChanged(nameof(ClearBtnVisible));
             OnPropertyChanged(nameof(DiscardBtnVisible));
+            OnPropertyChanged(nameof(ToolGridVisible));
+            OnPropertyChanged(nameof(Span));
         }
 
         private void OnHomeCommand()
         {
             Title = "Infrastructural systems simulator";
             HeaderIcon = "/public/icons/gear-logo-trans.png";
-            SetButtons(1, 0, 0, 0, 1, 1, 0, 0, 0);
+            SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
             CurrentView = new HomePageView();
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
@@ -128,7 +155,7 @@ namespace NetworkService.ViewModel
         {
             Title = "Network Entities";
             HeaderIcon = "/public/icons/clock-icon.png";
-            SetButtons(1, 1, 1, 1, 1, 0, 0, 0, 0);
+            SetButtons(1, 1, 1, 1, 1, 0, 0, 0);
             CurrentView = networkEntitiesViewInstance;
             NetworkEntitiesVM.IsActive = true;
             AddEntityVM.IsActive = false;
@@ -139,7 +166,7 @@ namespace NetworkService.ViewModel
         {
             Title = "Network Display";
             HeaderIcon = "/public/icons/network-display-icon.png";
-            SetButtons(1, 0, 0, 1, 1, 0, 0, 0, 0);
+            SetButtons(1, 0, 0, 1, 1, 0, 0, 0);
             CurrentView = networkDisplayViewInstance;
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
@@ -150,7 +177,7 @@ namespace NetworkService.ViewModel
         {
             Title = "Graph";
             HeaderIcon = "/public/icons/graph-icon.png";
-            SetButtons(0, 0, 0, 0, 0, 0, 0, 0, 0);
+            SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
             CurrentView = null;
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
@@ -168,6 +195,87 @@ namespace NetworkService.ViewModel
             }
         }
 
+        public void OnUndoCommand()
+        {
+            if (!NetworkEntitiesVM.IsActive && !NetworkDisplayVM.IsActive) return;
+            try
+            {
+                if (undoStack.Any())
+                {
+                    IUndoService action = undoStack.Pop();
+                    action.Undo();
+                    HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                    HistoryDtos.Remove(forRemoveFromHistory);
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Instance.ShowError("Error in Undo, try again later", "ERROR Undo");
+            }
+        }
+
+        public void OnUndoAllCommand()
+        {
+            if (!NetworkEntitiesVM.IsActive && !NetworkDisplayVM.IsActive) return;
+            try
+            {
+                if (NetworkEntitiesVM.SelectedHistoryItem != null && NetworkEntitiesVM.IsActive)
+                    SelectedHistoryItem = NetworkEntitiesVM.SelectedHistoryItem;
+                else if(NetworkDisplayVM.SelectedHistoryItem != null && NetworkDisplayVM.IsActive) 
+                    SelectedHistoryItem = NetworkDisplayVM.SelectedHistoryItem;
+                else
+                    SelectedHistoryItem = new HistoryDto(string.Empty, string.Empty);
+
+                if (SelectedHistoryItem.ActionName == string.Empty)
+                {
+                    if (MessageBox.Show("Do you want to Undo All changes and go back to the beginning?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        while (undoStack.Any())
+                        {
+                            if (undoStack.Any())
+                            {
+                                IUndoService action = undoStack.Pop();
+                                action.Undo();
+                                HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                HistoryDtos.Remove(forRemoveFromHistory);
+                            }
+                        }
+                    }
+                }
+                else if (SelectedHistoryItem.ActionName != string.Empty)
+                {
+                    if (MessageBox.Show($"Do you want to Undo All changes and go back to {SelectedHistoryItem.ActionName}?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        HistoryDto item;
+                        do
+                        {
+                            item = HistoryDtos.ElementAt(0);
+                            if (item.ActionName != SelectedHistoryItem.ActionName)
+                            {
+                                if (undoStack.Any())
+                                {
+                                    IUndoService action = undoStack.Pop();
+                                    action.Undo();
+                                    HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                                    HistoryDtos.Remove(forRemoveFromHistory);
+                                }
+                            }
+                        } while (item.ActionName != SelectedHistoryItem.ActionName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                NotificationService.Instance.ShowError("Error in Undo All, try again later.", "ERROR Undo all");
+            }
+            finally
+            {
+                selectedHistoryItem = new HistoryDto(string.Empty, "");
+            }
+        }
+
+
         private async void OnAddCommand()
         {
             if (!NetworkEntitiesVM.IsActive) return;
@@ -175,7 +283,7 @@ namespace NetworkService.ViewModel
             {
                 Title = "Add New Entity";
                 HeaderIcon = "/public/icons/add-icon.png";
-                SetButtons(1, 0, 0, 0, 0, 0, 1, 1, 1);
+                SetButtons(1, 0, 0, 0, 0, 1, 1, 1);
                 CurrentView = addEntityViewInstance;
                 NetworkEntitiesVM.IsActive = false;
                 AddEntityVM.IsActive = true;
@@ -228,6 +336,10 @@ namespace NetworkService.ViewModel
                     //if element is removed - do nothing - it will simulate that element, but wont affect application
                 }
             };
+            historyRepository = HistoryRepository.Instance;
+            undoStack = historyRepository.UndoStack;
+            historyDtoRepository = HistoryDtoRepository.Instance;
+            historyDtos = historyDtoRepository.HistoryDtos;
             createListener(); 
             NetworkEntitiesVM = new NetworkEntitiesViewModel();
             networkEntitiesViewInstance = new NetworkEntitiesView { DataContext = NetworkEntitiesVM };
@@ -241,6 +353,8 @@ namespace NetworkService.ViewModel
             GraphCommand = new MyICommand(OnGraphCommand);
             ExitCommand = new MyICommand(OnExitCommand);
             AddCommand = new MyICommand(OnAddCommand);
+            UndoCommand = new MyICommand(OnUndoCommand);
+            UndoAllCommand = new MyICommand(OnUndoAllCommand);
             OnHomeCommand(); 
         }
 

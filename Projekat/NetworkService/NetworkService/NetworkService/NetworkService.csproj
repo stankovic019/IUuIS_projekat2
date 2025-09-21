@@ -90,7 +90,10 @@
     <Compile Include="Model\Valve.cs" />
     <Compile Include="Repositories\ValveRepository.cs" />
     <Compile Include="Services\UndoServices\AddValve.cs" />
+    <Compile Include="Services\UndoServices\ConnectValves.cs" />
     <Compile Include="Services\UndoServices\DeleteValve.cs" />
+    <Compile Include="Services\UndoServices\DropOnCanvas.cs" />
+    <Compile Include="Services\UndoServices\FreeCanvas.cs" />
     <Compile Include="Services\UndoServices\IUndoService.cs" />
     <Compile Include="ViewModel\AddEntityViewModel.cs" />
     <Compile Include="ViewModel\HomePageViewModel.cs" />

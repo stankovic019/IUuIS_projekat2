@@ -185,12 +185,14 @@ namespace NetworkService.ViewModel
             
         }
 
-        private void OnExitCommand()
+        private async void OnExitCommand()
         {
-            if (MessageBox.Show("Exiting will apply all changes. Exit app?", "Exit",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Exiting will save all the changes, including added and deleted valves.\n" +
+                "Exit application?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 //ValveRepository.Instance.StoreValves();
+                NotificationService.Instance.ShowSuccess("", "Data saved successfully");
+                await Task.Delay(1500);
                 Application.Current.Shutdown();
             }
         }
@@ -206,11 +208,12 @@ namespace NetworkService.ViewModel
                     action.Undo();
                     HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
                     HistoryDtos.Remove(forRemoveFromHistory);
+                    NotificationService.Instance.ShowSuccess("", "Undo successful");
                 }
             }
             catch (Exception ex)
             {
-                NotificationService.Instance.ShowError("Error in Undo, try again later", "ERROR Undo");
+                NotificationService.Instance.ShowError("An error occured while trying to undo changes.", "Undo aborted");
             }
         }
 
@@ -240,11 +243,12 @@ namespace NetworkService.ViewModel
                                 HistoryDtos.Remove(forRemoveFromHistory);
                             }
                         }
+                        NotificationService.Instance.ShowSuccess("You are back at the beginning", "Undo All successful");
                     }
                 }
                 else if (SelectedHistoryItem.ActionName != string.Empty)
                 {
-                    if (MessageBox.Show($"Do you want to Undo All changes and go back to {SelectedHistoryItem.ActionName}?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    if (MessageBox.Show($"Do you want to Undo All changes and go back to '{SelectedHistoryItem.ActionName}' ?", "Undo all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                     {
                         HistoryDto item;
                         do
@@ -261,17 +265,19 @@ namespace NetworkService.ViewModel
                                 }
                             }
                         } while (item.ActionName != SelectedHistoryItem.ActionName);
+                        NotificationService.Instance.ShowSuccess($"You are back to the '{selectedHistoryItem.ActionName}' in history", "Undo All successful");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                NotificationService.Instance.ShowError("Error in Undo All, try again later.", "ERROR Undo all");
+                NotificationService.Instance.ShowError("An error occured while trying to undo all changes.", "Undo All aborted");
             }
             finally
             {
                 selectedHistoryItem = new HistoryDto(string.Empty, "");
+                NetworkEntitiesVM.SelectedHistoryItem = new HistoryDto("", "");
+                NetworkDisplayVM.SelectedHistoryItem = new HistoryDto("", "");
             }
         }
 
@@ -291,7 +297,7 @@ namespace NetworkService.ViewModel
                 WaitForCloseAsync();
             }
             catch (Exception ex) {
-                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "ERROR Add Entity");
+                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "Add Entity aborted");
             }
         }
 
@@ -306,7 +312,7 @@ namespace NetworkService.ViewModel
             }
             catch (Exception ex)
             {
-                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "ERROR Add Entity");
+                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "Add Entity aborted");
             }
             finally
             {

@@ -330,6 +330,7 @@ namespace NetworkService.ViewModel
                     SearchText = string.Empty;
                     SelectedFilterIndex = 0;
                     SelectedHistoryItem = new HistoryDto(string.Empty, ""); ;
+                    NotificationService.Instance.ShowSuccess("", "Filters successfully reseted");
                 }
             }catch(Exception ex)
             {
@@ -348,18 +349,19 @@ namespace NetworkService.ViewModel
             if (SelectedValve == null) return;
             try
             {
-                if (MessageBox.Show($"Do you really wanna delete Valve: {SelectedValve.Id} : {SelectedValve.Name} ?", $"Delete Valve {SelectedValve.Id}", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Do you really wanna delete 'Valve: {SelectedValve.Id} : {SelectedValve.Name}' ?", $"Delete Valve {SelectedValve.Id}", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     int id = SelectedValve.Id;
                     IUndoService deleteValve = new DeleteValve(this, SelectedValve);
 
                     Valves.Remove(SelectedValve);
-                    NotificationService.Instance.ShowInfo("Deleting...");
+                    NotificationService.Instance.ShowInfo("Please wait as the application is updating states", "Deleting...");
                     await Task.Delay(2000);
                     undoStack.Push(deleteValve);
                     HistoryDtos.Insert(0, new HistoryDto(deleteValve.getTitle(), deleteValve.getDateTime()));
                     if (ValvesView != null)
                         ValvesView.Refresh();
+                    NotificationService.Instance.ShowSuccess("", "Valve successfully deleted");
                     
                 }
             }

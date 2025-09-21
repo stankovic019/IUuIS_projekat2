@@ -116,25 +116,25 @@ namespace NetworkService.ViewModel
 
                 if (!Regex.IsMatch(Name, @"^[A-Za-z0-9_]+$")) //alphanumerical + _
                 {
-                    NotificationService.Instance.ShowError("Name must only contain letters, numbers, and underscore ('_')", "ERROR Name invalid");
+                    NotificationService.Instance.ShowError("Name must only contain letters, numbers, and underscore ('_')", "Invalid name");
                     retVal = false;
                 }
 
                 if(Valves.Any(v => v.Name.ToLower() == Name.ToLower()))
                 {
-                    NotificationService.Instance.ShowError("An entity with that name already exists.", "ERROR Name exists");
+                    NotificationService.Instance.ShowError("An entity with that name already exists.", "Existing name");
                     retVal = false;
                 }
 
                 if (SelectedTypeIndex == 0) 
                 {     
-                    NotificationService.Instance.ShowError("Please select an entity type.", "ERROR No type");
+                    NotificationService.Instance.ShowError("Please select an entity type.", "Type isn't selected");
                     retVal = false;
                 }
 
                 if(LastValue < 0)
                 {
-                    NotificationService.Instance.ShowError("Value cannot be a negative number", "ERROR Negative value");
+                    NotificationService.Instance.ShowError("Value cannot be a negative number", "Negative value");
                     retVal = false;
                 }
 
@@ -150,11 +150,12 @@ namespace NetworkService.ViewModel
                     this.Name = string.Empty;
                     this.SelectedTypeIndex = 0;
                     this.LastValue = -1;
-                    this.OnClose = true;    
+                    this.OnClose = true;
+                    NotificationService.Instance.ShowSuccess("", "Valve added successfully");
                 }
             }
             catch (Exception ex) { 
-                        NotificationService.Instance.ShowError($"Entity '{Name}' cannot be added to the table", "ERROR Adding entity");
+                        NotificationService.Instance.ShowError($"Entity '{Name}' cannot be added to the table", "Adding entity aborted");
             }
         }
 
@@ -169,11 +170,11 @@ namespace NetworkService.ViewModel
                     this.Name = string.Empty;
                     this.SelectedTypeIndex = 0;
                     this.LastValue = -1;
-                    NotificationService.Instance.ShowSuccess("All inputs cleared!", "SUCCESS Cleared inputs");
+                    NotificationService.Instance.ShowSuccess("", "Inputs cleared successfully");
                 }
             }catch(Exception ex)
             {
-                    NotificationService.Instance.ShowError("Cannot clear inputs. Try again later.", "ERROR Clear inputs");
+                    NotificationService.Instance.ShowError("Cannot clear inputs. Try again later.", "Clear inputs aborted");
             }
         }
 
@@ -189,11 +190,11 @@ namespace NetworkService.ViewModel
                     this.SelectedTypeIndex = 0;
                     this.LastValue = -1;
                     this.OnClose = true;
-                    NotificationService.Instance.ShowSuccess("Entity discarded", "SUCCESS Discard entity");
+                    NotificationService.Instance.ShowSuccess("", "Entity discarded successfully");
                 }
             }
             catch (Exception ex) { 
-                    NotificationService.Instance.ShowError("Entity cannot be discarded. Try again later.", "ERROR Discard entity");
+                    NotificationService.Instance.ShowError("Entity cannot be discarded. Try again later.", "Discard entity aborted");
             }
 
         }

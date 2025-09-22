@@ -93,7 +93,7 @@ namespace NetworkService.ViewModel
 
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
-            entityId = valveRepository.GreatestId + 1; //the greatest in the sequence is n, so the next is n+1
+            entityId = valveRepository.GreatestId + 1; //the greatest id in the sequence is n, so the next is n+1
             historyRepository = HistoryRepository.Instance;
             undoStack = historyRepository.UndoStack;
             historyDtoRepository = HistoryDtoRepository.Instance;

@@ -173,7 +173,7 @@ namespace NetworkService.ViewModel
                 hour++;
             }
 
-            hour = hour == 24 ? 0 : hour; //reseting time
+            hour = hour == 24 ? 0 : hour; //reseting hour
 
             StringBuilder sb = new StringBuilder();
 

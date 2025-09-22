@@ -140,16 +140,52 @@ namespace NetworkService.ViewModel
             OnPropertyChanged(nameof(Span));
         }
 
+        private void SetActivity(int windowNum)
+        {
+            switch (windowNum) {
+                case 0: //home window
+                    NetworkEntitiesVM.IsActive = false;
+                    AddEntityVM.IsActive = false;
+                    NetworkDisplayVM.IsActive = false;
+                    GraphVM.IsActive = false;
+                    break;
+                case 1: // net ent
+                    NetworkEntitiesVM.IsActive = true;
+                    AddEntityVM.IsActive = false;
+                    NetworkDisplayVM.IsActive = false;
+                    GraphVM.IsActive = false;
+                    break;
+                case 2: //net disp
+                    NetworkEntitiesVM.IsActive = false;
+                    AddEntityVM.IsActive = false;
+                    NetworkDisplayVM.IsActive = true;
+                    GraphVM.IsActive = false;
+                    break;
+                case 3: // graph window
+                    NetworkEntitiesVM.IsActive = false;
+                    AddEntityVM.IsActive = false;
+                    NetworkDisplayVM.IsActive = false;
+                    GraphVM.IsActive = true;
+                    break;
+                case 4: //add window
+                    NetworkEntitiesVM.IsActive = false;
+                    NetworkDisplayVM.IsActive = false;
+                    AddEntityVM.IsActive = true;
+                    AddEntityVM.OnClose = false;
+                    GraphVM.IsActive = false;
+                    break;
+            }
+        }
+
+
         private void OnHomeCommand()
         {
             Title = "Infrastructural systems simulator";
             HeaderIcon = "/public/icons/gear-logo-trans.png";
             SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
+            SetActivity(0);
             CurrentView = new HomePageView();
-            NetworkEntitiesVM.IsActive = false;
-            AddEntityVM.IsActive = false;
-            NetworkDisplayVM.IsActive = false;
-            GraphVM.IsActive = false;
+           
         }
 
         private void OnNetEntitiesCommand()
@@ -157,11 +193,9 @@ namespace NetworkService.ViewModel
             Title = "Network Entities";
             HeaderIcon = "/public/icons/clock-icon.png";
             SetButtons(1, 1, 1, 1, 1, 0, 0, 0);
+            SetActivity(1);
             CurrentView = networkEntitiesViewInstance;
-            NetworkEntitiesVM.IsActive = true;
-            AddEntityVM.IsActive = false;
-            NetworkDisplayVM.IsActive = false;
-            GraphVM.IsActive = false;
+            
         }
 
         private void OnNetDisplayCommand()
@@ -169,11 +203,9 @@ namespace NetworkService.ViewModel
             Title = "Network Display";
             HeaderIcon = "/public/icons/network-display-icon.png";
             SetButtons(1, 0, 0, 1, 1, 0, 0, 0);
-            CurrentView = networkDisplayViewInstance;
-            NetworkEntitiesVM.IsActive = false;
-            AddEntityVM.IsActive = false;
-            NetworkDisplayVM.IsActive = true;
-            GraphVM.IsActive = false;
+            SetActivity(2);
+            CurrentView= networkDisplayViewInstance;
+            
         }
 
         private void OnGraphCommand()
@@ -181,12 +213,28 @@ namespace NetworkService.ViewModel
             Title = "Graph";
             HeaderIcon = "/public/icons/graph-icon.png";
             SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
+            SetActivity(3);
             CurrentView = graphViewInstance;
-            NetworkEntitiesVM.IsActive = false;
-            AddEntityVM.IsActive = false;
-            NetworkDisplayVM.IsActive = false;
-            GraphVM.IsActive = true;
+            
 
+        }
+
+        private async void OnAddCommand()
+        {
+            if (!NetworkEntitiesVM.IsActive) return;
+            try
+            {
+                Title = "Add New Entity";
+                HeaderIcon = "/public/icons/add-icon.png";
+                SetButtons(1, 0, 0, 0, 0, 1, 1, 1);
+                SetActivity(4);
+                CurrentView = addEntityViewInstance;
+                WaitForCloseAsync();
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "Add Entity aborted");
+            }
         }
 
         private async void OnExitCommand()
@@ -194,9 +242,9 @@ namespace NetworkService.ViewModel
             if (MessageBox.Show("Exiting will save all the changes, including added and deleted valves.\n" +
                 "Exit application?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                //ValveRepository.Instance.StoreValves();
+                ValveRepository.Instance.StoreValves();
                 NotificationService.Instance.ShowSuccess("", "Data saved successfully");
-                //await Task.Delay(1500);
+                await Task.Delay(1500);
                 Application.Current.Shutdown();
             }
         }
@@ -286,27 +334,6 @@ namespace NetworkService.ViewModel
         }
 
 
-        private async void OnAddCommand()
-        {
-            if (!NetworkEntitiesVM.IsActive) return;
-            try
-            {
-                Title = "Add New Entity";
-                HeaderIcon = "/public/icons/add-icon.png";
-                SetButtons(1, 0, 0, 0, 0, 1, 1, 1);
-                CurrentView = addEntityViewInstance;
-                NetworkEntitiesVM.IsActive = false;
-                NetworkDisplayVM.IsActive = false;
-                AddEntityVM.IsActive = true;
-                AddEntityVM.OnClose = false;
-                GraphVM.IsActive = false;
-                WaitForCloseAsync();
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "Add Entity aborted");
-            }
-        }
 
         private async Task WaitForCloseAsync()
         {

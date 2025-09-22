@@ -40,8 +40,6 @@ namespace NetworkService.Services.UndoServices
                 viewModel.draggingSourceIndex = destCanvasIdx;
                 viewModel.RedoDropOnCanvas(valve, srcCanvasIdx, destCanvasIdx);
             }
-
-            //NotificationService.Instance.ShowSuccess($"Undo drop of Valve {_movedValve.Id} success");
         }
 
         public string getDateTime()

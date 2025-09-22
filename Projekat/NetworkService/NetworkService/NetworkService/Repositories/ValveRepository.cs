@@ -50,9 +50,6 @@ namespace NetworkService.Repositories
 
         public void StoreValves()
         {
-            //valve: Id,Name,Type,Value,DateTime\r\n
-
-
             File.WriteAllText(valveFilePath, string.Empty);
             int id = 1; //after closing, shifting all ids to stay in the sequence
                         //i.e. if valve with id == 3 is deleted, the sequence will have hole in that id,

@@ -26,13 +26,9 @@ namespace NetworkService.Services.UndoServices
 
         public void Undo()
         {
-            // Re-place the valve on the canvas
             viewModel.RedoDropOnCanvas(valve, canvasIndex, -1);
-
-            // Remove the valve from the list since it's now on a canvas
             viewModel.ValvesInList.Remove(valve);
 
-            // Add the lines back to the collection
             foreach (var line in lines)
             {
                 viewModel.LineCollection.Add(line);

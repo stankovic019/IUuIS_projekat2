@@ -71,7 +71,7 @@ namespace NetworkService.Model
 
         public double DotY => Y - 25;
 
-        public double TextX => X - xSpacing; //approximate center for text
+        public double TextX => X - xSpacing; //approximate center for value
 
         public double TextY => Y - 15;
 

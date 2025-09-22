@@ -103,8 +103,11 @@
                 <Canvas Width="370" Height="560">
                     <StackPanel Orientation="Horizontal" Width="390" Height="560" HorizontalAlignment="Left">
                         <StackPanel Orientation="Vertical" Margin="0,0,35,0">
-                            <!-- Canvas 0 -->                               
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="0" />
+                            <!-- Canvas 0 -->
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 1" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="0" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[0]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="0" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[0]}" IsHitTestVisible="False" />
@@ -128,7 +131,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[0]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 3 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="3" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 4" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="3" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[3]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="3" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[3]}" IsHitTestVisible="False" />
@@ -151,7 +157,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[3]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 6 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="6" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 7" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="6" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[6]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="6" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[6]}" IsHitTestVisible="False" />
@@ -174,7 +183,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[6]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 9 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="9" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 10" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 25 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="9" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[9]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="9" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[9]}" IsHitTestVisible="False" />
@@ -199,7 +211,10 @@
 
                         <StackPanel Orientation="Vertical" Margin="0,0,35,0">
                             <!-- Canvas 1 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="1" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 2" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="1" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[1]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="1" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[1]}" IsHitTestVisible="False" />
@@ -222,7 +237,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[1]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 4 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="4" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 5" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="4" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[4]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="4" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[4]}" IsHitTestVisible="False" />
@@ -245,7 +263,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[4]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 7 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="7" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 8" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="7" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[7]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="7" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[7]}" IsHitTestVisible="False" />
@@ -268,7 +289,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[7]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 10 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="10" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 11" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 25 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="10" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[10]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="10" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[10]}" IsHitTestVisible="False" />
@@ -293,7 +317,10 @@
 
                         <StackPanel Orientation="Vertical">
                             <!-- Canvas 2 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="2" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 3" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="2" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[2]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="2" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[2]}" IsHitTestVisible="False" />
@@ -316,7 +343,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[2]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 5 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="5" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 6" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="5" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[5]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="5" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[5]}" IsHitTestVisible="False" />
@@ -339,7 +369,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[5]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 8 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="8" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 9" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 30 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="8" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[8]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="8" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[8]}" IsHitTestVisible="False" />
@@ -362,7 +395,10 @@
                             <TextBlock Text="{Binding DescriptionCollection[8]}" FontFamily="Courier New" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 5 0 0"/>
 
                             <!-- Canvas 11 -->
-                            <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="11" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Field 12" FontFamily="Courier New" FontWeight="DemiBold" Margin="5 0 25 0" VerticalAlignment="Bottom"/>
+                                <Button Content="X" FontFamily="Courier New" FontWeight="ExtraBold" FontSize="20" Background="Transparent" BorderThickness="0" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 0 0 0" Command="{Binding FreeCanvas}" CommandParameter="11" />
+                            </StackPanel>
                             <Border BorderBrush="{Binding BorderBrushCollection[11]}" BorderThickness="2" Width="100" Height="100" Margin="0,0,0,0" AllowDrop="True" Tag="11" Background="Transparent">
                                 <Grid Background="Transparent">
                                     <ContentControl Content="{Binding CanvasCollection[11]}" IsHitTestVisible="False" />

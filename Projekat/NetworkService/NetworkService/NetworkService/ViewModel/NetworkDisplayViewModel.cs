@@ -139,8 +139,6 @@ namespace NetworkService.ViewModel
             FreeCanvas = new MyICommand<object>(OnFreeCanvas);
             RightMouseButtonDownOnCanvas = new MyICommand<object>(OnRightMouseButtonDown);
             StartDragFromCanvas = new MyICommand<object>(OnStartDragFromCanvas);
-            //UndoCommand = new MyICommand(OnUndo);
-            //UndoAllCommand = new MyICommand(OnUndoAll);
 
             this.Observer();
 
@@ -208,30 +206,21 @@ namespace NetworkService.ViewModel
 
                 if (CanvasCollection[destinationIndex].Resources["taken"] == null)
                 {
-                    // Perform the drop action
                     if (draggingSourceIndex != -1)
                     {
-                        // This is a move from one canvas to another
                         IsMoving = true;
                         this.OnFreeCanvas(draggingSourceIndex);
                     }
                     else
                     {
-                        // This is a drop from the list, so remove it from the list
                         ValvesInList.Remove(draggedValve);
                     }
 
-                    // Place the valve on the new canvas. This is a crucial step that changes the state.
-                    // You can use the RedoDropOnCanvas helper method here as well, since it's cleaner.
                     RedoDropOnCanvas(draggedValve, destinationIndex, draggingSourceIndex);
-                    // Create and push the undo action
                     IUndoService undoAction = new DropOnCanvas(this, draggedValve, destinationIndex, draggingSourceIndex);
                     undoStack.Push(undoAction);
                     HistoryDtos.Insert(0, new HistoryDto(undoAction.getTitle(), undoAction.getDateTime()));
 
-
-
-                    // Reset drag state
                     draggedValve = null;
                     draggingSourceIndex = -1;
                     dragging = false;
@@ -250,12 +239,9 @@ namespace NetworkService.ViewModel
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                //if the main valves are updated (added new or deleted)
                                 List<Valve> valvesToAdd = Valves.Where(v =>
                                 {
-                                    // Check if the valve exists in ValvesInList based on its unique ID
                                     bool inList = ValvesInList.Any(vList => vList.Id == v.Id);
-                                    // Check if the valve exists on any canvas
                                     bool onCanvas = CanvasCollection.Any(canvas =>
                                     {
                                         var valveOnCanvas = canvas.Resources["data"] as Valve;
@@ -267,7 +253,6 @@ namespace NetworkService.ViewModel
 
                                 foreach (Valve valve in valvesToAdd)
                                 {
-                                    // Add a new, but unique, instance to your display list
                                     ValvesInList.Add(new Valve(valve));
                                 }
 
@@ -350,23 +335,20 @@ namespace NetworkService.ViewModel
 
             Valve valveToDelete = CanvasCollection[index].Resources["data"] as Valve;
 
-            // Find all lines connected to this canvas
             List<NewLine> linesToDelete = LineCollection.Where(line =>
                 line.Source == index || line.Destination == index).ToList();
 
             if (!IsMoving)
             {
-                // This is the user's action, so we create an undo object.
+                // this is the users action, so we create an undo object
                 IUndoService undoAction = new FreeCanvas(this, valveToDelete, index, linesToDelete);
                 undoStack.Push(undoAction);
                 HistoryDtos.Insert(0, new HistoryDto(undoAction.getTitle(), undoAction.getDateTime()));
+                DeleteLinesForCanvas(index);
             }
 
-            // Now, call the private method to perform the actual state changes.
-            // This is the key separation to prevent recursion.
             PerformFreeCanvas(index, valveToDelete);
 
-            // Reset line drawing state if necessary
             if (sourceCanvasIndex != -1)
             {
                 isLineSourceSelected = false;
@@ -381,15 +363,12 @@ namespace NetworkService.ViewModel
 
         public void PerformFreeCanvas(int index, Valve valve)
         {
-            // The view model is handling the IsMoving logic
-            // Add the valve back to the list of available valves
             if (!IsMoving)
             {
                 ValvesInList.Add(valve);
                 DeleteLinesForCanvas(index);
             }
 
-            // Clear the canvas's visual properties
             CanvasCollection[index].Children.Clear();
             CanvasCollection[index].Background = Brushes.Transparent;
             CanvasCollection[index].Resources.Remove("taken");
@@ -426,7 +405,6 @@ namespace NetworkService.ViewModel
             BorderBrushCollection[index] = valve.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
             DescriptionCollection[index] = $"ID: {valve.Id} Value: {valve.MeasuredValue}";
 
-            // Handle line updates if the valve was moved from another canvas
             if (srcIdx != -1)
             {
                 UpdateLinesForCanvas(srcIdx, index);
@@ -529,7 +507,6 @@ namespace NetworkService.ViewModel
                     }
                     else
                     {
-                        //beggining and end of the line is on the same valve
                         isLineSourceSelected = false;
                         ConnectingString = string.Empty;
                         linePoint1 = new Point();
@@ -540,7 +517,6 @@ namespace NetworkService.ViewModel
             }
             else
             {
-                //canvas is not already taken
                 isLineSourceSelected = false;
                 ConnectingString = string.Empty;
                 linePoint1 = new Point();

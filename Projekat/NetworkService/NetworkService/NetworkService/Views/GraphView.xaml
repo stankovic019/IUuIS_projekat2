@@ -13,6 +13,10 @@
         <viewModel:GraphViewModel/>
     </UserControl.DataContext>
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+    
 
     <Border Padding="10">
 
@@ -37,7 +41,65 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
                 <Grid Grid.Row="1">
+                    <Border BorderBrush="Gray" BorderThickness="2" Background="White">
+                        <!-- Canvas for drawing the graph -->
+                        <Canvas Name="GraphCanvas" Background="White" Margin="40 20">
+                            <!-- X-axis line -->
+                            <Line X1="0" Y1="{Binding CanvasHeight}" X2="{Binding CanvasWidth}" Y2="{Binding CanvasHeight}" 
+                                  Stroke="Black" StrokeThickness="2"/>
 
+                            <!-- Graph dots and lines will be drawn here through ItemsControl -->
+                            <ItemsControl ItemsSource="{Binding GraphPoints}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Each graph point consists of a line (if not first point) and a dot -->
+                                        <Canvas>
+                                            <!-- Connecting line to previous point -->
+                                            <Line X1="{Binding PreviousX}" Y1="{Binding PreviousY}" 
+                                                  X2="{Binding X}" Y2="{Binding Y}" 
+                                                  Stroke="DarkGray" StrokeThickness="2"
+                                                  Visibility="{Binding ShowLine, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                                            <!-- Measurement dot -->
+                                            <Ellipse Width="50" Height="50" 
+                                                     Fill="{Binding DotColor}" 
+                                                     Stroke="Black" StrokeThickness="1"
+                                                     Canvas.Left="{Binding DotX}" 
+                                                     Canvas.Top="{Binding DotY}"/>
+
+
+                                            <!-- Value text inside the dot -->
+                                            <TextBlock Text="{Binding MeasuredValue}" 
+                                                       FontSize="20" FontWeight="Bold" 
+                                                       Foreground="White"
+                                                       Canvas.Left="{Binding TextX}" 
+                                                       Canvas.Top="{Binding TextY}"
+                                                       HorizontalAlignment="Center" 
+                                                       VerticalAlignment="Center"/>
+
+                                            <!-- Timestamp label on X-axis -->
+                                            <TextBlock Text="{Binding TimeStamp}" 
+                                                       FontSize="14" FontFamily="Courier New"
+                                                       Canvas.Left="{Binding TimeLabelX}" 
+                                                       Canvas.Top="{Binding TimeLabelY}"
+                                                       HorizontalAlignment="Center"/>
+                                        </Canvas>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style TargetType="ContentPresenter">
+                                        <Setter Property="Canvas.Left" Value="0"/>
+                                        <Setter Property="Canvas.Top" Value="0"/>
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                            </ItemsControl>
+                        </Canvas>
+                    </Border>
 
 
                 </Grid>
@@ -65,7 +127,6 @@
                         <ItemsControl ItemsSource="{Binding Rectangles}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <!-- 10 pravougaonika ravnomerno raspoređeni -->
                                     <UniformGrid Rows="1" Columns="10"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>

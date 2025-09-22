@@ -75,6 +75,7 @@
     <Compile Include="Helpers\MyICommand.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Model\GraphPoint.cs" />
     <Compile Include="Model\NewLine.cs" />
     <Compile Include="Model\NewRectangle.cs" />
     <Compile Include="Model\PlotValve.cs" />

@@ -6,19 +6,12 @@ using NetworkService.Services.UndoServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace NetworkService.ViewModel
 {
@@ -29,14 +22,14 @@ namespace NetworkService.ViewModel
         public bool IsActive
         {
             get => isActive;
-            set =>  SetProperty(ref isActive, value);
+            set => SetProperty(ref isActive, value);
         }
 
         private bool isMoving = false;
         public bool IsMoving
         {
             get => isMoving;
-            set => SetProperty(ref isMoving, value); 
+            set => SetProperty(ref isMoving, value);
         }
 
         private string connectingString;
@@ -50,7 +43,7 @@ namespace NetworkService.ViewModel
         private ValveRepository valveRepository;
         public ObservableCollection<Valve> Valves { get; private set; }
         public ObservableCollection<Valve> ValvesInList { get; set; }
-        
+
         private HistoryRepository historyRepository;
         private Stack<IUndoService> undoStack { get; }
 
@@ -159,8 +152,8 @@ namespace NetworkService.ViewModel
                 .GroupBy(v => v.Type)
                 .Select(g => new ValveGroupDto(
                     g.Key,
-                    g.Key.ToString(),             
-                    g.OrderBy(v => v.Name).ToList() 
+                    g.Key.ToString(),
+                    g.OrderBy(v => v.Name).ToList()
                 ));
             GroupedValves = new ObservableCollection<ValveGroupDto>(groups);
         }
@@ -172,7 +165,7 @@ namespace NetworkService.ViewModel
                 if (border.Tag is string tagString && int.TryParse(tagString, out int index))
                 {
                     if (CanvasCollection[index].Resources.Contains("taken"))
-                    {   
+                    {
                         IsMoving = true;
                         draggedValve = (Valve)CanvasCollection[index].Resources["data"];
                         draggingSourceIndex = index;
@@ -324,7 +317,8 @@ namespace NetworkService.ViewModel
                     ValvesInList.Remove(valveToRemove);
                 }
                 BuildGroupedValves();
-            }catch(Exception ex) { }
+            }
+            catch (Exception ex) { }
         }
 
         private void DeleteLinesForCanvas(int canvasIndex)
@@ -490,7 +484,7 @@ namespace NetworkService.ViewModel
             {
                 if (!isLineSourceSelected)
                 {
-                    ConnectingString = $"Connecting {index+1} to ...";
+                    ConnectingString = $"Connecting {index + 1} to ...";
                     sourceCanvasIndex = index;
 
                     linePoint1 = GetPointForCanvasIndex(sourceCanvasIndex);

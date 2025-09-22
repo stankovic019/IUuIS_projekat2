@@ -1,12 +1,8 @@
 ﻿using NetworkService.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
 
 namespace NetworkService.Repositories
 {
@@ -33,7 +29,8 @@ namespace NetworkService.Repositories
 
             string[] lines = FileAccessManager.ReadFromFile(valveFilePath);
 
-            foreach (string line in lines) {
+            foreach (string line in lines)
+            {
 
                 string[] splits = line.Split(',');
                 int id = Convert.ToInt32(splits[0]);
@@ -48,14 +45,14 @@ namespace NetworkService.Repositories
             this.greatestId = valves.Any() ? valves.Max(v => v.Id) : 0;
         }
 
-        public ObservableCollection<Valve> Valves { get { return valves; }}
+        public ObservableCollection<Valve> Valves { get { return valves; } }
         public int GreatestId { get { return greatestId; } set { this.greatestId = value; } }
 
         public void StoreValves()
         {
             //valve: Id,Name,Type,Value,DateTime\r\n
-            
-           
+
+
             File.WriteAllText(valveFilePath, string.Empty);
             int id = 1; //after closing, shifting all ids to stay in the sequence
                         //i.e. if valve with id == 3 is deleted, the sequence will have hole in that id,

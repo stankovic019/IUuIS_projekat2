@@ -1,10 +1,4 @@
 ﻿using NetworkService.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace NetworkService.DTOs
 {
@@ -22,7 +16,8 @@ namespace NetworkService.DTOs
         public string ActionName
         {
             get { return this.actionName; }
-            set {
+            set
+            {
                 if (actionName != value)
                 {
                     actionName = value;

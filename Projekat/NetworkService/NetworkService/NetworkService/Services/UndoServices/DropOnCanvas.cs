@@ -1,11 +1,6 @@
 ﻿using NetworkService.Model;
 using NetworkService.ViewModel;
-using Notifications.Wpf.ViewModels.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkService.Services.UndoServices
 {
@@ -58,12 +53,12 @@ namespace NetworkService.Services.UndoServices
         {
 
             if (draggedFromList)
-                return $"Drop Valve {valve.Id} on field {destCanvasIdx+1}";
+                return $"Drop Valve {valve.Id} on field {destCanvasIdx + 1}";
             else
-                return $"Move Valve {valve.Id} from field {srcCanvasIdx+1} to field {destCanvasIdx+1}";
+                return $"Move Valve {valve.Id} from field {srcCanvasIdx + 1} to field {destCanvasIdx + 1}";
         }
 
-        
+
 
     }
 }

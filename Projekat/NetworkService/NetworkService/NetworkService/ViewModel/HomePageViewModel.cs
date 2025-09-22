@@ -2,7 +2,6 @@
 using NetworkService.Helpers;
 using NetworkService.Model;
 using NetworkService.Repositories;
-using NetworkService.Services;
 using NetworkService.Services.UndoServices;
 using System;
 using System.Collections.Generic;
@@ -11,16 +10,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace NetworkService.ViewModel
 {
     public class HomePageViewModel : BindableBase
     {
-       
+
         private HistoryRepository historyRepository;
         private Stack<IUndoService> undoStack;
         private string[] toolTips;
@@ -37,7 +34,8 @@ namespace NetworkService.ViewModel
 
         ValveRepository valveRepository;
         private ObservableCollection<Valve> valves;
-        public ObservableCollection<Valve> Valves{
+        public ObservableCollection<Valve> Valves
+        {
             get { return new ObservableCollection<Valve>(valves.Take(3)); }
         }
 
@@ -46,7 +44,7 @@ namespace NetworkService.ViewModel
         private string toolTip;
         public string ToolTip
         {
-            get => toolTip; 
+            get => toolTip;
             set => SetProperty(ref toolTip, value);
         }
 

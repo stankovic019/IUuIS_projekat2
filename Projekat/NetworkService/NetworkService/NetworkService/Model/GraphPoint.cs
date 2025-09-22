@@ -1,6 +1,4 @@
 ﻿using NetworkService.Helpers;
-using System;
-using System.Windows;
 using System.Windows.Media;
 
 namespace NetworkService.Model
@@ -42,11 +40,11 @@ namespace NetworkService.Model
             set => SetProperty(ref previousX, value);
         }
 
-       public double PreviousY
-       {
+        public double PreviousY
+        {
             get => previousY;
             set => SetProperty(ref previousY, value);
-       }
+        }
 
         public PlotValve PlotValve
         {
@@ -71,14 +69,14 @@ namespace NetworkService.Model
 
         public double DotX => X - 25; //centerin the 50px wide dot
 
-        public double DotY => Y - 25; 
+        public double DotY => Y - 25;
 
         public double TextX => X - xSpacing; //approximate center for text
 
-        public double TextY => Y - 15; 
+        public double TextY => Y - 15;
 
         public double TimeLabelX => X - 24; // Center the label under the point
 
-        public double TimeLabelY { get; set; } 
+        public double TimeLabelY { get; set; }
     }
 }

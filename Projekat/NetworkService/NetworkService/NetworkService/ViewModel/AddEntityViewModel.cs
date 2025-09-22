@@ -8,12 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Navigation;
 
 namespace NetworkService.ViewModel
 {
@@ -51,15 +47,16 @@ namespace NetworkService.ViewModel
         public bool IsFormDirty
         {
             get => isFormDirty;
-            set {
-                if(Name == string.Empty)
-                SetProperty(ref isFormDirty, value);
-            
-            } 
+            set
+            {
+                if (Name == string.Empty)
+                    SetProperty(ref isFormDirty, value);
+
+            }
         }
 
         private int entityId;
-        public int EntityId { get => entityId;}
+        public int EntityId { get => entityId; }
 
         private string name = string.Empty;
         public string Name
@@ -91,7 +88,8 @@ namespace NetworkService.ViewModel
         public MyICommand ClearCommand { get; }
         public MyICommand DiscardCommand { get; }
 
-        public AddEntityViewModel() {
+        public AddEntityViewModel()
+        {
 
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
@@ -120,19 +118,19 @@ namespace NetworkService.ViewModel
                     retVal = false;
                 }
 
-                if(Valves.Any(v => v.Name.ToLower() == Name.ToLower()))
+                if (Valves.Any(v => v.Name.ToLower() == Name.ToLower()))
                 {
                     NotificationService.Instance.ShowError("An entity with that name already exists.", "Existing name");
                     retVal = false;
                 }
 
-                if (SelectedTypeIndex == 0) 
-                {     
+                if (SelectedTypeIndex == 0)
+                {
                     NotificationService.Instance.ShowError("Please select an entity type.", "Type isn't selected");
                     retVal = false;
                 }
 
-                if(LastValue < 0)
+                if (LastValue < 0)
                 {
                     NotificationService.Instance.ShowError("Value cannot be a negative number", "Negative value");
                     retVal = false;
@@ -154,8 +152,9 @@ namespace NetworkService.ViewModel
                     NotificationService.Instance.ShowSuccess("", "Valve added successfully");
                 }
             }
-            catch (Exception ex) { 
-                        NotificationService.Instance.ShowError($"Entity '{Name}' cannot be added to the table", "Adding entity aborted");
+            catch (Exception ex)
+            {
+                NotificationService.Instance.ShowError($"Entity '{Name}' cannot be added to the table", "Adding entity aborted");
             }
         }
 
@@ -172,9 +171,10 @@ namespace NetworkService.ViewModel
                     this.LastValue = -1;
                     NotificationService.Instance.ShowSuccess("", "Inputs cleared successfully");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                    NotificationService.Instance.ShowError("Cannot clear inputs. Try again later.", "Clear inputs aborted");
+                NotificationService.Instance.ShowError("Cannot clear inputs. Try again later.", "Clear inputs aborted");
             }
         }
 
@@ -193,8 +193,9 @@ namespace NetworkService.ViewModel
                     NotificationService.Instance.ShowSuccess("", "Entity discarded successfully");
                 }
             }
-            catch (Exception ex) { 
-                    NotificationService.Instance.ShowError("Entity cannot be discarded. Try again later.", "Discard entity aborted");
+            catch (Exception ex)
+            {
+                NotificationService.Instance.ShowError("Entity cannot be discarded. Try again later.", "Discard entity aborted");
             }
 
         }

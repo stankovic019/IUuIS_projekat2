@@ -16,7 +16,12 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
-    
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Left" Modifiers="Control" Command="{Binding LeftCommand}" />
+        <KeyBinding Key="Right" Modifiers="Control" Command="{Binding RightCommand}" />
+    </UserControl.InputBindings>
+
 
     <Border Padding="10">
 
@@ -33,22 +38,19 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="0" FontFamily="Courier New" FontSize="25" Margin="0 0 0 5" FontWeight="DemiBold" ItemsSource="{Binding Valves}" SelectedItem="{Binding SelectedValve, Mode=TwoWay}">
+                <ComboBox Grid.Row="0" FontFamily="Courier New" FontSize="25"  FontWeight="DemiBold" ItemsSource="{Binding Valves}" SelectedItem="{Binding SelectedValve, Mode=TwoWay}" Margin="0 0 0 5">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                   
                 <Grid Grid.Row="1">
-                    <Border BorderBrush="Gray" BorderThickness="2" Background="White">
-                        <!-- Canvas for drawing the graph -->
-                        <Canvas Name="GraphCanvas" Background="White" Margin="40 20">
-                            <!-- X-axis line -->
+                    <Border BorderBrush="Gray" BorderThickness="0">
+                        <Canvas Name="GraphCanvas" Margin="40 20">
                             <Line X1="0" Y1="{Binding CanvasHeight}" X2="{Binding CanvasWidth}" Y2="{Binding CanvasHeight}" 
                                   Stroke="Black" StrokeThickness="2"/>
-
-                            <!-- Graph dots and lines will be drawn here through ItemsControl -->
                             <ItemsControl ItemsSource="{Binding GraphPoints}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -57,23 +59,18 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <!-- Each graph point consists of a line (if not first point) and a dot -->
                                         <Canvas>
-                                            <!-- Connecting line to previous point -->
                                             <Line X1="{Binding PreviousX}" Y1="{Binding PreviousY}" 
                                                   X2="{Binding X}" Y2="{Binding Y}" 
                                                   Stroke="DarkGray" StrokeThickness="2"
                                                   Visibility="{Binding ShowLine, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                                            <!-- Measurement dot -->
                                             <Ellipse Width="50" Height="50" 
                                                      Fill="{Binding DotColor}" 
                                                      Stroke="Black" StrokeThickness="1"
                                                      Canvas.Left="{Binding DotX}" 
                                                      Canvas.Top="{Binding DotY}"/>
 
-
-                                            <!-- Value text inside the dot -->
                                             <TextBlock Text="{Binding MeasuredValue}" 
                                                        FontSize="20" FontWeight="Bold" 
                                                        Foreground="White"
@@ -82,7 +79,6 @@
                                                        HorizontalAlignment="Center" 
                                                        VerticalAlignment="Center"/>
 
-                                            <!-- Timestamp label on X-axis -->
                                             <TextBlock Text="{Binding TimeStamp}" 
                                                        FontSize="14" FontFamily="Courier New"
                                                        Canvas.Left="{Binding TimeLabelX}" 

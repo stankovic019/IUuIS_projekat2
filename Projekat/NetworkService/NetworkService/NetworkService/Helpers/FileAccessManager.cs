@@ -1,14 +1,11 @@
-﻿using NetworkService.Model;
-using System;
-using System.IO;
-using System.Net.Mime;
+﻿using System.IO;
 using System.Threading;
 
 public static class FileAccessManager
 {
     // One global mutex for read/write threads
     private static readonly Mutex fileMutex = new Mutex(false, "Global\\NetworkServiceFileMutex");
-    
+
     public static void WriteToFile(string path, string content)
     {
         try
@@ -22,7 +19,7 @@ public static class FileAccessManager
         }
         finally
         {
-            fileMutex.ReleaseMutex(); 
+            fileMutex.ReleaseMutex();
         }
     }
 
@@ -30,7 +27,7 @@ public static class FileAccessManager
     {
         try
         {
-            fileMutex.WaitOne(); 
+            fileMutex.WaitOne();
 
             return File.ReadAllLines(path);
         }

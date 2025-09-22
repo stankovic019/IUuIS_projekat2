@@ -10,15 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Shapes;
 
 namespace NetworkService.ViewModel
 {
@@ -69,6 +66,9 @@ namespace NetworkService.ViewModel
 
         public NetworkDisplayViewModel NetworkDisplayVM { get; }
         private NetworkDisplayView networkDisplayViewInstance;
+
+        public GraphViewModel GraphVM { get; }
+        private GraphView graphViewInstance;
 
         private string title = "Infrastructural systems simulator";
 
@@ -149,6 +149,7 @@ namespace NetworkService.ViewModel
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
             NetworkDisplayVM.IsActive = false;
+            GraphVM.IsActive = false;
         }
 
         private void OnNetEntitiesCommand()
@@ -160,6 +161,7 @@ namespace NetworkService.ViewModel
             NetworkEntitiesVM.IsActive = true;
             AddEntityVM.IsActive = false;
             NetworkDisplayVM.IsActive = false;
+            GraphVM.IsActive = false;
         }
 
         private void OnNetDisplayCommand()
@@ -171,6 +173,7 @@ namespace NetworkService.ViewModel
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
             NetworkDisplayVM.IsActive = true;
+            GraphVM.IsActive = false;
         }
 
         private void OnGraphCommand()
@@ -178,11 +181,12 @@ namespace NetworkService.ViewModel
             Title = "Graph";
             HeaderIcon = "/public/icons/graph-icon.png";
             SetButtons(0, 0, 0, 0, 0, 0, 0, 0);
-            CurrentView = new GraphView();
+            CurrentView = graphViewInstance;
             NetworkEntitiesVM.IsActive = false;
             AddEntityVM.IsActive = false;
             NetworkDisplayVM.IsActive = false;
-            
+            GraphVM.IsActive = true;
+
         }
 
         private async void OnExitCommand()
@@ -224,7 +228,7 @@ namespace NetworkService.ViewModel
             {
                 if (NetworkEntitiesVM.SelectedHistoryItem != null && NetworkEntitiesVM.IsActive)
                     SelectedHistoryItem = NetworkEntitiesVM.SelectedHistoryItem;
-                else if(NetworkDisplayVM.SelectedHistoryItem != null && NetworkDisplayVM.IsActive) 
+                else if (NetworkDisplayVM.SelectedHistoryItem != null && NetworkDisplayVM.IsActive)
                     SelectedHistoryItem = NetworkDisplayVM.SelectedHistoryItem;
                 else
                     SelectedHistoryItem = new HistoryDto(string.Empty, string.Empty);
@@ -292,11 +296,14 @@ namespace NetworkService.ViewModel
                 SetButtons(1, 0, 0, 0, 0, 1, 1, 1);
                 CurrentView = addEntityViewInstance;
                 NetworkEntitiesVM.IsActive = false;
+                NetworkDisplayVM.IsActive = false;
                 AddEntityVM.IsActive = true;
                 AddEntityVM.OnClose = false;
+                GraphVM.IsActive = false;
                 WaitForCloseAsync();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 NotificationService.Instance.ShowError("Adding a new entity is temporarily not permitted. Try again later.", "Add Entity aborted");
             }
         }
@@ -307,7 +314,7 @@ namespace NetworkService.ViewModel
             {
                 while (!AddEntityVM.OnClose)
                 {
-                    await Task.Delay(100); 
+                    await Task.Delay(100);
                 }
             }
             catch (Exception ex)
@@ -346,13 +353,15 @@ namespace NetworkService.ViewModel
             undoStack = historyRepository.UndoStack;
             historyDtoRepository = HistoryDtoRepository.Instance;
             historyDtos = historyDtoRepository.HistoryDtos;
-            createListener(); 
+            createListener();
             NetworkEntitiesVM = new NetworkEntitiesViewModel();
             networkEntitiesViewInstance = new NetworkEntitiesView { DataContext = NetworkEntitiesVM };
             AddEntityVM = new AddEntityViewModel();
-            addEntityViewInstance = new AddEntityView{ DataContext =  AddEntityVM};
+            addEntityViewInstance = new AddEntityView { DataContext = AddEntityVM };
             NetworkDisplayVM = new NetworkDisplayViewModel();
-            networkDisplayViewInstance = new NetworkDisplayView{ DataContext = NetworkDisplayVM };
+            networkDisplayViewInstance = new NetworkDisplayView { DataContext = NetworkDisplayVM };
+            GraphVM = new GraphViewModel();
+            graphViewInstance = new GraphView { DataContext = GraphVM };
             HomeCommand = new MyICommand(OnHomeCommand);
             NetEntitiesCommand = new MyICommand(OnNetEntitiesCommand);
             NetDisplayCommand = new MyICommand(OnNetDisplayCommand);
@@ -361,7 +370,7 @@ namespace NetworkService.ViewModel
             AddCommand = new MyICommand(OnAddCommand);
             UndoCommand = new MyICommand(OnUndoCommand);
             UndoAllCommand = new MyICommand(OnUndoAllCommand);
-            OnHomeCommand(); 
+            OnHomeCommand();
         }
 
         private void createListener()

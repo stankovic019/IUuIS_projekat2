@@ -1,20 +1,19 @@
-﻿using NetworkService.Helpers;
+﻿using NetworkService.DTOs;
+using NetworkService.Helpers;
 using NetworkService.Model;
+using NetworkService.Repositories;
+using NetworkService.Services;
+using NetworkService.Services.UndoServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Threading.Tasks;
-using System.Threading;
-using System.IO;
-using NetworkService.Repositories;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
-using NetworkService.Services;
-using NetworkService.Services.UndoServices;
-using NetworkService.DTOs;
 
 namespace NetworkService.ViewModel
 {
@@ -54,7 +53,7 @@ namespace NetworkService.ViewModel
                             }
 
                             readLines = FileAccessManager.ReadFromFile(path);
-                            
+
                         }
 
                         Application.Current.Dispatcher.Invoke(() =>
@@ -93,7 +92,7 @@ namespace NetworkService.ViewModel
                         Console.WriteLine("Error reading file: " + ex.Message);
                     }
 
-                    Thread.Sleep(1000); 
+                    Thread.Sleep(1000);
                 }
             });
 
@@ -310,7 +309,7 @@ namespace NetworkService.ViewModel
             ValvesView = CollectionViewSource.GetDefaultView(Valves);
             ValvesView.Filter = ValveFilter;
             if (ValvesView.Filter == null)
-            SelectedTypeIndex = 0;
+                SelectedTypeIndex = 0;
             SelectedFilterIndex = 0;
             SearchText = string.Empty;
             historyRepository = HistoryRepository.Instance;
@@ -335,7 +334,8 @@ namespace NetworkService.ViewModel
                     SelectedHistoryItem = new HistoryDto(string.Empty, ""); ;
                     NotificationService.Instance.ShowSuccess("", "Filters successfully reseted");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 NotificationService.Instance.ShowError("Error while reseting filters. Try again later.", "ERROR Reset");
             }
@@ -365,10 +365,11 @@ namespace NetworkService.ViewModel
                     if (ValvesView != null)
                         ValvesView.Refresh();
                     NotificationService.Instance.ShowSuccess("", "Valve successfully deleted");
-                    
+
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 NotificationService.Instance.ShowError($"Error while Deleting {SelectedValve}, try again later", "ERROR Delete");
             }
         }

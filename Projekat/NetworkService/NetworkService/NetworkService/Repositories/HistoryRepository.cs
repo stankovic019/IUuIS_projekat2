@@ -1,9 +1,5 @@
 ﻿using NetworkService.Services.UndoServices;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkService.Repositories
 {
@@ -23,12 +19,13 @@ namespace NetworkService.Repositories
 
         private Stack<IUndoService> undoStack;
 
-        public HistoryRepository() {
+        public HistoryRepository()
+        {
             undoStack = new Stack<IUndoService>();
         }
 
         public Stack<IUndoService> UndoStack { get { return undoStack; } }
-     
+
     }
 }
 

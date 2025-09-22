@@ -1,13 +1,6 @@
 ﻿using NetworkService.Model;
-using NetworkService.Repositories;
 using NetworkService.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkService.Services.UndoServices
 {

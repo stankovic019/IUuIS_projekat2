@@ -1,10 +1,6 @@
 ﻿using NetworkService.Model;
 using NetworkService.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetworkService.Services.UndoServices
 {
@@ -20,7 +16,7 @@ namespace NetworkService.Services.UndoServices
         {
             this.viewModel = viewModel;
             this.line = line;
-            this.actionTitle = $"Fields {cIdx1+1} and {cIdx2+1} connected";
+            this.actionTitle = $"Fields {cIdx1 + 1} and {cIdx2 + 1} connected";
             this.dateTime = DateTime.Now.ToString();
         }
         public void Undo()

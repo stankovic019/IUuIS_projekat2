@@ -1,9 +1,4 @@
 ﻿using NetworkService.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace NetworkService.Model
@@ -13,9 +8,10 @@ namespace NetworkService.Model
 
         private Brush fill;
 
-        public Brush Fill 
-        { get => fill;
-          set => SetProperty(ref fill, value); 
+        public Brush Fill
+        {
+            get => fill;
+            set => SetProperty(ref fill, value);
         }
 
     }

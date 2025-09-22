@@ -1,26 +1,37 @@
 ﻿using NetworkService.Helpers;
 using NetworkService.Model;
 using NetworkService.Repositories;
+using NetworkService.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace NetworkService.ViewModel
 {
     public class GraphViewModel : BindableBase
     {
 
+        private bool isActive;
+        public bool IsActive
+        { 
+            get => isActive;
+            set => SetProperty(ref isActive, value);
+        }
+
         private int r = 25;
+        private int switchValves = 0;
+        public int SwitchValves
+        {
+            get => switchValves;
+            set => SetProperty(ref switchValves, value);   
+        }
+
         private ValveRepository valveRepository;
         public ObservableCollection<Valve> Valves { get; set; }
-        
         public ObservableCollection<GraphPoint> GraphPoints { get; set; }
         public double CanvasWidth { get; set; } = 900;
         public double CanvasHeight { get; set; } = 350;
@@ -42,7 +53,7 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref type1, value);
         }
 
-        public double dist2 {  get; set; }
+        public double dist2 { get; set; }
         private string dist2Str;
         public string Dist2Str
         {
@@ -59,7 +70,7 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref type2, value);
         }
 
-        public ObservableCollection<NewRectangle> Rectangles {  get; set; }
+        public ObservableCollection<NewRectangle> Rectangles { get; set; }
         private Valve selectedValve;
         public Valve SelectedValve
         {
@@ -67,12 +78,18 @@ namespace NetworkService.ViewModel
             set
             {
                 SetProperty(ref selectedValve, value);
+                NotificationService.Instance.ShowInfo("", "Loading graph...");
                 UpdateGraph();
             }
         }
 
-        public GraphViewModel() 
-        { 
+
+        public MyICommand LeftCommand { get; }
+        public MyICommand RightCommand { get; }
+
+
+        public GraphViewModel()
+        {
             Type1 = ValveType.CableSensor.ToString();
             Type2 = ValveType.DigitalManometer.ToString();
             Rectangles = new ObservableCollection<NewRectangle>();
@@ -87,7 +104,8 @@ namespace NetworkService.ViewModel
             GraphPoints = new ObservableCollection<GraphPoint>();
             valveRepository = ValveRepository.Instance;
             Valves = valveRepository.Valves;
-
+            LeftCommand = new MyICommand(OnLeftArrowCommand);
+            RightCommand = new MyICommand(OnRightArrowCommand);
             this.Observer();
         }
 
@@ -96,7 +114,7 @@ namespace NetworkService.ViewModel
             if (SelectedValve == null || SelectedValve.LastFiveMeasurements == null)
             {
                 GraphPoints.Clear();
-                return;
+                return;   
             }
 
             GraphPoints.Clear();
@@ -106,15 +124,15 @@ namespace NetworkService.ViewModel
             int minValue = measurements.Min(m => m.MeasuredValue);
             int maxValue = measurements.Max(m => m.MeasuredValue);
 
-            int valueRange = Math.Max(maxValue - minValue, 5); 
-            int paddedMin = minValue - valueRange / 4; 
-            int paddedMax = maxValue + valueRange / 4; 
+            int valueRange = Math.Max(maxValue - minValue, 5);
+            int paddedMin = minValue - valueRange / 4;
+            int paddedMax = maxValue + valueRange / 4;
 
             for (int i = 0; i < measurements.Count; i++)
             {
                 PlotValve v = measurements[i];
 
-                double xPosition = (CanvasWidth / (measurements.Count + 1)) * (i + 1); 
+                double xPosition = (CanvasWidth / (measurements.Count + 1)) * (i + 1);
                 double yPosition = CanvasHeight - 20 - ((v.MeasuredValue - paddedMin) / (double)(paddedMax - paddedMin)) * (CanvasHeight - 40);
 
                 v.TimeStamp = FormatTime(v.TimeStamp);
@@ -126,7 +144,7 @@ namespace NetworkService.ViewModel
                     TimeLabelY = CanvasHeight + 10
                 };
 
-                if(i > 0)
+                if (i > 0)
                 {
                     GraphPoint prev = GraphPoints[i - 1];
                     (gp.PreviousX, gp.PreviousY) = FindCoordinatesOnACircle(prev.X, prev.Y, gp.X, gp.Y, r);
@@ -139,9 +157,7 @@ namespace NetworkService.ViewModel
 
         private string FormatTime(string timestamp)
         {
-            //18-Sep-25 04:13:36
             string[] splits = timestamp.Split(' ');
-            //04:13:36
             string[] timeSplitted = splits[1].Split(':');
             int hour = int.Parse(timeSplitted[0]);
             int minute = int.Parse(timeSplitted[1]);
@@ -151,7 +167,7 @@ namespace NetworkService.ViewModel
             if (seconds > 30) minute++;
 
             //reseting minute if needed
-            if(minute >= 60)
+            if (minute >= 60)
             {
                 minute = 0;
                 hour++;
@@ -160,7 +176,7 @@ namespace NetworkService.ViewModel
             hour = hour == 24 ? 0 : hour; //reseting time
 
             StringBuilder sb = new StringBuilder();
-            
+
             if (hour < 10) sb.Append($"0{hour}");
             else sb.Append(hour);
 
@@ -232,41 +248,55 @@ namespace NetworkService.ViewModel
                 for (int i = type1Dist; i < 10; i++)
                     Rectangles[i].Fill = type2Color;
             }
+            else
+                foreach (NewRectangle r in Rectangles)
+                    r.Fill = Brushes.Black;
         }
 
         private (double, double) FindCoordinatesOnACircle(double x1, double y1, double x2, double y2, double r)
         {
-            //centar kružnice mi je prethodna tacka -> (a,b) = (x1,y1)
 
-            double k = (y2 - y1) / (x2 - x1); //izracunam koeficijent pravca prave
-            double n = y1 - k * x1; //izracunam n
+            double k = (y2 - y1) / (x2 - x1);
+            double n = y1 - k * x1;
 
-            //racunanje koeficijenata
             double a = Math.Pow(k, 2) + 1;
             double b = 2 * k * (n - y1) - 2 * x1;
             double c = Math.Pow(x1, 2) + Math.Pow((n - y1), 2) - Math.Pow(r, 2);
 
-            //koreni kvadratne jednacine
             double pointX1 = (-b + Math.Sqrt((Math.Pow(b, 2) - 4 * a * c))) / (2 * a);
             double pointX2 = (-b - Math.Sqrt((Math.Pow(b, 2) - 4 * a * c))) / (2 * a);
 
-            //racunanje odgovarajuce y vrednosti
             double pointY1 = k * pointX1 + n;
             double pointY2 = k * pointX2 + n;
 
-            //racunanje euklidske udaljenosti izmedju tacke na kruznici i centra sledece kruznice
             double distanceX1Y1 = Math.Sqrt(Math.Pow(x2 - pointX1, 2) + Math.Pow(y2 - pointY1, 2));
             double distanceX2Y2 = Math.Sqrt(Math.Pow(x2 - pointX2, 2) + Math.Pow(y2 - pointY2, 2));
 
-            //vracam tacku cija je euklidska duzina manja
-            if(distanceX1Y1 < distanceX2Y2)
+            if (distanceX1Y1 < distanceX2Y2)
                 return (pointX1, pointY1);
             else
                 return (pointX2, pointY2);
-
         }
 
+        private void OnLeftArrowCommand()
+        {
+            if (SwitchValves == 0)
+                SwitchValves = Valves.Count - 1;
+            else
+                SwitchValves--;
 
+            SelectedValve = Valves[SwitchValves];
+        }
+
+        private void OnRightArrowCommand()
+        {
+            if (SwitchValves == Valves.Count - 1)
+                SwitchValves = 0;
+            else
+                SwitchValves++;
+
+            SelectedValve = Valves[SwitchValves];
+        }
 
     }
 }

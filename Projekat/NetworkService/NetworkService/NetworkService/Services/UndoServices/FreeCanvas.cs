@@ -2,9 +2,6 @@
 using NetworkService.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace NetworkService.Services.UndoServices
 {
@@ -30,8 +27,8 @@ namespace NetworkService.Services.UndoServices
         public void Undo()
         {
             // Re-place the valve on the canvas
-            viewModel.RedoDropOnCanvas(valve, canvasIndex,-1);
-            
+            viewModel.RedoDropOnCanvas(valve, canvasIndex, -1);
+
             // Remove the valve from the list since it's now on a canvas
             viewModel.ValvesInList.Remove(valve);
 

@@ -1,14 +1,6 @@
 ﻿using NetworkService.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
 namespace NetworkService.Model
 {
@@ -34,7 +26,7 @@ namespace NetworkService.Model
             this.lastFiveMeasurements = new ObservableCollection<PlotValve>();
 
         }
-        
+
         public Valve(Valve v)
         {
             this.Id = v.Id;
@@ -58,7 +50,7 @@ namespace NetworkService.Model
         {
             PlotValve pv = new PlotValve(latestValue, timestamp);
 
-            if(LastFiveMeasurements.Count < 5)
+            if (LastFiveMeasurements.Count < 5)
                 LastFiveMeasurements.Add(pv);
             else
             {
@@ -99,7 +91,7 @@ namespace NetworkService.Model
             get { return type; }
             set
             {
-                if(type != value)
+                if (type != value)
                 {
                     type = value;
                     OnPropertyChanged("Type");
@@ -116,9 +108,9 @@ namespace NetworkService.Model
                 {
                     measuredValue = value;
                     OnPropertyChanged("MeasuredValue");
-                    if(measuredValue < 5)
+                    if (measuredValue < 5)
                         Validation = ValueValidation.Low;
-                    else if(measuredValue > 16)
+                    else if (measuredValue > 16)
                         Validation = ValueValidation.High;
                     else
                         Validation = ValueValidation.Normal;
@@ -185,7 +177,7 @@ namespace NetworkService.Model
             {
                 this.ValidationErrors["Name"] = "Name cannot be empty.";
             }
- 
+
             if (MeasuredValue < 0)
             {
                 this.ValidationErrors["Value"] = "Value must be non-negative.";

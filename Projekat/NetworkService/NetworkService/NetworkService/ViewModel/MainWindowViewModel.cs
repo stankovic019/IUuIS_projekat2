@@ -99,6 +99,20 @@ namespace NetworkService.ViewModel
             set => SetProperty(ref toolGridVisible, value);
         }
 
+        private bool showUndoDialog = true;
+        public bool ShowUndoDialog 
+        {
+            get => showUndoDialog;
+            set {
+                if (showUndoDialog)
+                    MessageBox.Show("By turning off this option, you are responsible for each 'Undo' command", "Show Undo dialog", MessageBoxButton.OK, MessageBoxImage.Information);
+                showUndoDialog = !showUndoDialog;
+                SetProperty(ref showUndoDialog, value);
+                string ch = showUndoDialog ? "checked" : "unchecked";
+                NotificationService.Instance.ShowInfo("", $"Show Undo dialog {ch}");
+
+            } 
+        }
         public bool AddBtnVisible { get; set; }
         public bool DeleteBtnVisible { get; set; }
         public bool UndoBtnVisible { get; set; }
@@ -252,20 +266,27 @@ namespace NetworkService.ViewModel
         public void OnUndoCommand()
         {
             if (!NetworkEntitiesVM.IsActive && !NetworkDisplayVM.IsActive) return;
-            try
+            MessageBoxResult res = MessageBoxResult.Yes;
+            if (ShowUndoDialog)
+                res = MessageBox.Show("Do you want to Undo last change?", "Undo", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            
+            if(res != MessageBoxResult.No)
             {
-                if (undoStack.Any())
+                try
                 {
-                    IUndoService action = undoStack.Pop();
-                    action.Undo();
-                    HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
-                    HistoryDtos.Remove(forRemoveFromHistory);
-                    NotificationService.Instance.ShowSuccess("", "Undo successful");
+                    if (undoStack.Any())
+                    {
+                        IUndoService action = undoStack.Pop();
+                        action.Undo();
+                        HistoryDto forRemoveFromHistory = HistoryDtos.FirstOrDefault(h => h.ActionName == action.getTitle());
+                        HistoryDtos.Remove(forRemoveFromHistory);
+                        NotificationService.Instance.ShowSuccess("", "Undo successful");
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Instance.ShowError("An error occured while trying to undo changes.", "Undo aborted");
+                catch (Exception ex)
+                {
+                    NotificationService.Instance.ShowError("An error occured while trying to undo changes.", "Undo aborted");
+                }
             }
         }
 

@@ -111,6 +111,8 @@
                         </Button>
                     </StackPanel>
 
+                    <CheckBox Content="Show Undo dialog" FontFamily="Courier New" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Margin="10 0 0 10" HorizontalAlignment="Center" IsChecked="{Binding ShowUndoDialog}" ToolTip="Set visibility for Undo dialog"/>
+
                 </Grid>
 
                 <Grid Grid.Column="2" Background="LightGray" x:Name="ToolBoard_Grid" Visibility="{Binding ToolGridVisible, Converter={StaticResource BoolToVisibilityConverter}}">

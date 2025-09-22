@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -256,7 +257,7 @@ namespace NetworkService.ViewModel
                                     ValvesInList.Add(new Valve(valve));
                                 }
 
-                                //which valve needs to be removed from canvas (its deleted)
+                                //which valve needs to be removed from canvas (its deleted) or updated
                                 List<Valve> valvesToRemoveFromCanvas = new List<Valve>();
                                 for (int i = 0; i < 12; ++i)
                                 {
@@ -265,6 +266,13 @@ namespace NetworkService.ViewModel
                                     {
                                         valvesToRemoveFromCanvas.Add(canvasValve);
                                         this.OnFreeCanvas(i);
+                                    }
+                                    else if(canvasValve != null)
+                                    {
+                                        Valve newValveMeasurement = Valves.FirstOrDefault(v => v.Id == canvasValve.Id);
+                                        CanvasCollection[i].Resources["data"] = newValveMeasurement;
+                                        DescriptionCollection[i] = $"ID: {newValveMeasurement.Id} Value: {newValveMeasurement.MeasuredValue}";
+                                        BorderBrushCollection[i] = newValveMeasurement.Validation == ValueValidation.Normal ? Brushes.Black : Brushes.Red;
                                     }
                                 }
 
@@ -279,6 +287,7 @@ namespace NetworkService.ViewModel
                                 {
                                     this.DeleteValveFromList(valve);
                                 }
+
                             });
                         }
                         catch (Exception ex)

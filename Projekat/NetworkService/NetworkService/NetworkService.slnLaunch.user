@@ -1,6 +1,6 @@
 [
   {
-    "Name": "New Profile",
+    "Name": "Both",
     "Projects": [
       {
         "Path": "NetworkService\\NetworkService.csproj",

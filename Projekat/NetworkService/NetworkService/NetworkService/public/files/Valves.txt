@@ -1,8 +1,8 @@
-1,PressureSensor_Tank1,CableSensor,11,23-Sep-25 07:08:45
-2,PressureSensor_Tank2,CableSensor,10,23-Sep-25 07:08:51
-3,Manometer_MainValve1,DigitalManometer,15,23-Sep-25 07:07:29
-4,Manometer_MainValve2,DigitalManometer,19,23-Sep-25 07:08:51
-5,Manometer_MainValve4,DigitalManometer,10,23-Sep-25 07:08:06
-6,Manometer_MainValve3,DigitalManometer,6,23-Sep-25 07:08:39
-7,Manometer_MainValve5,DigitalManometer,0,23-Sep-25 07:08:30
-8,PressureSensor_Tank3,CableSensor,3,23-Sep-25 07:08:24
+1,PressureSensor_Tank2,CableSensor,6,23-Sep-25 12:48:39
+2,Manometer_MainValve1,DigitalManometer,12,23-Sep-25 12:48:28
+3,Manometer_MainValve2,DigitalManometer,16,23-Sep-25 12:46:48
+4,Manometer_MainValve4,DigitalManometer,20,23-Sep-25 12:46:24
+5,Manometer_MainValve3,DigitalManometer,17,23-Sep-25 12:48:34
+6,Manometer_MainValve5,DigitalManometer,10,23-Sep-25 12:48:46
+7,PressureSensor_Tank3,CableSensor,3,23-Sep-25 12:48:51
+8,PressureSensor_Tank1,CableSensor,13,23-Sep-25 12:47:01
